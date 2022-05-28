@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">My Food</string>
+    <string name="str_login">Login</string>
+    <string name="str_create_an_account">Create an Account</string>
+    <string name="str_don_t_want_login">Don\'t want login?</string>
+    <string name="str_skip">Skip</string>
+    <string name="str_th">TH</string>
+    <string name="str_en">EN</string>
 </resources>
