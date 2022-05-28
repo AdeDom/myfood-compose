@@ -1,4 +1,4 @@
-package com.adedom.data.repositories
+package com.adedom.data.repositories.default_repository
 
 class DefaultRepositoryImpl : DefaultRepository {
 
