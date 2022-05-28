@@ -2,6 +2,7 @@
 buildscript {
     ext {
         kodein_version = '7.11.0'
+        coroutine_version = '1.6.2'
     }
 }
 
