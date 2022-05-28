@@ -16,9 +16,12 @@ abstract class BaseFragment : Fragment(), DIAware {
 
         setupViewModel()
         setupInitial()
+        setupAction()
     }
 
     open fun setupViewModel() {}
 
     open fun setupInitial() {}
+
+    open fun setupAction() {}
 }
