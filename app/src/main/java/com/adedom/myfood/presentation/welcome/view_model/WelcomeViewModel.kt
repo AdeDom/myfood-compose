@@ -25,6 +25,11 @@ class WelcomeViewModel : BaseViewModel<WelcomeUiState, WelcomeUiAction>(WelcomeU
                             WelcomeUiState.Login
                         }
                     }
+                    WelcomeUiAction.Register -> {
+                        _uiState.update {
+                            WelcomeUiState.Register
+                        }
+                    }
                     WelcomeUiAction.Skip -> {
                         _uiState.update {
                             WelcomeUiState.Skip
@@ -45,6 +50,13 @@ class WelcomeViewModel : BaseViewModel<WelcomeUiState, WelcomeUiAction>(WelcomeU
     fun loginAction() {
         viewModelScope.launch {
             val action = WelcomeUiAction.Login
+            _uiAction.emit(action)
+        }
+    }
+
+    fun registerAction() {
+        viewModelScope.launch {
+            val action = WelcomeUiAction.Register
             _uiAction.emit(action)
         }
     }

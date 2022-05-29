@@ -12,4 +12,11 @@
     <string name="str_forget_your_password">Forget your password?</string>
     <string name="str_don_t_have_an_account">Don\'t have an Account?</string>
     <string name="str_sign_up">Sign Up</string>
+    <string name="str_add_your_details_to_sign_up">Add your details to sign up</string>
+    <string name="str_name">Name</string>
+    <string name="str_email">Email</string>
+    <string name="str_mobile_no">Mobile No</string>
+    <string name="str_address">Address</string>
+    <string name="str_confirm_password">Confirm Password</string>
+    <string name="str_already_have_an_account">Already have an Account?</string>
 </resources>

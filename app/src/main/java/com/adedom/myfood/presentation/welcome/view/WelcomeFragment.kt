@@ -52,6 +52,12 @@ class WelcomeFragment : BaseFragment() {
                             startActivity(intent)
                             viewModel.initialAction()
                         }
+                        WelcomeUiState.Register -> {
+                            val intent = Intent(context, AuthenticationActivity::class.java)
+                            intent.putExtra(AppConstant.PAGE, AppConstant.REGISTER_PAGE)
+                            startActivity(intent)
+                            viewModel.initialAction()
+                        }
                         WelcomeUiState.Skip -> {
                             val intent = Intent(context, MainActivity::class.java)
                             startActivity(intent)
@@ -66,6 +72,10 @@ class WelcomeFragment : BaseFragment() {
     override fun setupAction() {
         binding.btnLogin.setOnClickListener {
             viewModel.loginAction()
+        }
+
+        binding.btnRegister.setOnClickListener {
+            viewModel.registerAction()
         }
 
         binding.tvSkip.setOnClickListener {

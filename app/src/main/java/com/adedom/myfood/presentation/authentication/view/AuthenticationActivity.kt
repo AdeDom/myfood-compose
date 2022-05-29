@@ -22,6 +22,10 @@ class AuthenticationActivity : BaseActivity() {
             supportFragmentManager.commit {
                 replace(binding.frameLayout.id, LoginFragment.newInstant())
             }
+        } else {
+            supportFragmentManager.commit {
+                replace(binding.frameLayout.id, RegisterFragment.newInstant())
+            }
         }
     }
 }
