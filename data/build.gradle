@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
+    id 'kotlinx-serialization'
 }
 
 android {
@@ -41,4 +42,8 @@ dependencies {
     implementation "org.kodein.di:kodein-di:$kodein_version"
 
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutine_version"
+
+    implementation "io.ktor:ktor-client-okhttp:$ktor_version"
+    implementation "io.ktor:ktor-client-logging-jvm:$ktor_version"
+    implementation "io.ktor:ktor-client-serialization:$ktor_version"
 }
