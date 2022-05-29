@@ -14,6 +14,7 @@ import com.adedom.myfood.presentation.authentication.view.AuthenticationActivity
 import com.adedom.myfood.presentation.main.view.MainActivity
 import com.adedom.myfood.presentation.welcome.state.WelcomeUiState
 import com.adedom.myfood.presentation.welcome.view_model.WelcomeViewModel
+import com.adedom.myfood.utils.constant.AppConstant
 import kotlinx.coroutines.launch
 import org.kodein.di.instance
 
@@ -47,6 +48,7 @@ class WelcomeFragment : BaseFragment() {
                         }
                         WelcomeUiState.Login -> {
                             val intent = Intent(context, AuthenticationActivity::class.java)
+                            intent.putExtra(AppConstant.PAGE, AppConstant.LOGIN_PAGE)
                             startActivity(intent)
                             viewModel.initialAction()
                         }
