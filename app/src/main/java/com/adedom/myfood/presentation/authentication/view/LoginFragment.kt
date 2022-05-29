@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.isVisible
+import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -47,6 +48,18 @@ class LoginFragment : BaseFragment() {
                     when (uiState) {
                         LoginUiState.Initial -> {
                         }
+                        LoginUiState.EmailSuccess -> {
+                            binding.tvErrorEmail.isVisible = false
+                        }
+                        LoginUiState.EmailFailed -> {
+                            binding.tvErrorEmail.isVisible = true
+                        }
+                        LoginUiState.PasswordSuccess -> {
+                            binding.tvErrorPassword.isVisible = false
+                        }
+                        LoginUiState.PasswordFailed -> {
+                            binding.tvErrorPassword.isVisible = true
+                        }
                         LoginUiState.ShowLoading -> {
                             binding.progressBar.isVisible = true
                             binding.btnLogin.setBackgroundResource(R.drawable.shape_overlay_button_grey)
@@ -76,6 +89,14 @@ class LoginFragment : BaseFragment() {
     }
 
     override fun setupAction() {
+        binding.edtEmail.addTextChangedListener { email ->
+            viewModel.emailAction(email.toString())
+        }
+
+        binding.edtPassword.addTextChangedListener { password ->
+            viewModel.passwordAction(password.toString())
+        }
+
         binding.btnLogin.setOnClickListener {
             viewModel.loginAction()
         }

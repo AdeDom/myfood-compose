@@ -3,6 +3,14 @@ package com.adedom.myfood.presentation.authentication.state
 sealed interface LoginUiState {
     object Initial : LoginUiState
 
+    object EmailSuccess : LoginUiState
+
+    object EmailFailed : LoginUiState
+
+    object PasswordSuccess : LoginUiState
+
+    object PasswordFailed : LoginUiState
+
     object ShowLoading : LoginUiState
 
     object HideLoading : LoginUiState

@@ -19,6 +19,18 @@ class LoginViewModel(
         uiAction
             .onEach { uiAction ->
                 when (uiAction) {
+                    is LoginUiAction.Email -> {
+                        val isValidateEmail = loginUseCase.isValidateEmail(uiAction.email)
+                        _uiState.update {
+                            if (isValidateEmail) LoginUiState.EmailSuccess else LoginUiState.EmailFailed
+                        }
+                    }
+                    is LoginUiAction.Password -> {
+                        val isValidatePassword = loginUseCase.isValidatePassword(uiAction.password)
+                        _uiState.update {
+                            if (isValidatePassword) LoginUiState.PasswordSuccess else LoginUiState.PasswordFailed
+                        }
+                    }
                     LoginUiAction.Register -> {
                         _uiState.update {
                             LoginUiState.Register
@@ -30,6 +42,20 @@ class LoginViewModel(
                 }
             }
             .launchIn(viewModelScope)
+    }
+
+    fun emailAction(email: String) {
+        viewModelScope.launch {
+            val action = LoginUiAction.Email(email)
+            _uiAction.emit(action)
+        }
+    }
+
+    fun passwordAction(password: String) {
+        viewModelScope.launch {
+            val action = LoginUiAction.Password(password)
+            _uiAction.emit(action)
+        }
     }
 
     fun loginAction() {
