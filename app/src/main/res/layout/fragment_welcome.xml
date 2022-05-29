@@ -65,7 +65,7 @@
             android:id="@+id/btnLogin"
             android:layout_width="300dp"
             android:layout_height="60dp"
-            android:background="@drawable/shape_overlay_button"
+            android:background="@drawable/shape_overlay_button_yellow"
             android:gravity="center">
 
             <TextView
@@ -126,7 +126,7 @@
             <TextView
                 android:layout_width="40dp"
                 android:layout_height="wrap_content"
-                android:background="@drawable/shape_overlay_button"
+                android:background="@drawable/shape_overlay_button_yellow"
                 android:gravity="center"
                 android:padding="4dp"
                 android:text="@string/str_th"
@@ -177,7 +177,7 @@
             <TextView
                 android:layout_width="40dp"
                 android:layout_height="wrap_content"
-                android:background="@drawable/shape_overlay_button"
+                android:background="@drawable/shape_overlay_button_yellow"
                 android:gravity="center"
                 android:padding="4dp"
                 android:text="@string/str_en"

@@ -10,6 +10,7 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.adedom.myfood.R
 import com.adedom.myfood.base.BaseFragment
 import com.adedom.myfood.databinding.FragmentLoginBinding
 import com.adedom.myfood.presentation.authentication.state.LoginUiState
@@ -46,8 +47,15 @@ class LoginFragment : BaseFragment() {
                     when (uiState) {
                         LoginUiState.Initial -> {
                         }
-                        is LoginUiState.Loading -> {
-                            binding.progressBar.isVisible = uiState.isLoading
+                        LoginUiState.ShowLoading -> {
+                            binding.progressBar.isVisible = true
+                            binding.btnLogin.setBackgroundResource(R.drawable.shape_overlay_button_grey)
+                            binding.btnLogin.isClickable = false
+                        }
+                        LoginUiState.HideLoading -> {
+                            binding.progressBar.isVisible = false
+                            binding.btnLogin.setBackgroundResource(R.drawable.shape_overlay_button_yellow)
+                            binding.btnLogin.isClickable = true
                         }
                         LoginUiState.Register -> {
                             val authenticationActivity = activity as? AuthenticationActivity

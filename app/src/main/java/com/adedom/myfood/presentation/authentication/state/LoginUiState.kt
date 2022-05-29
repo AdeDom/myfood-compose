@@ -3,9 +3,9 @@ package com.adedom.myfood.presentation.authentication.state
 sealed interface LoginUiState {
     object Initial : LoginUiState
 
-    data class Loading(
-        val isLoading: Boolean,
-    ) : LoginUiState
+    object ShowLoading : LoginUiState
+
+    object HideLoading : LoginUiState
 
     object LoginSuccess : LoginUiState
 

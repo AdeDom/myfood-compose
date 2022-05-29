@@ -49,7 +49,7 @@ class LoginViewModel(
     private fun callLogin() {
         viewModelScope.launch {
             _uiState.update {
-                LoginUiState.Loading(true)
+                LoginUiState.ShowLoading
             }
             val resource = loginUseCase("dom6", "dom5")
             when (resource) {
@@ -65,7 +65,7 @@ class LoginViewModel(
                 }
             }
             _uiState.update {
-                LoginUiState.Loading(false)
+                LoginUiState.HideLoading
             }
         }
     }
