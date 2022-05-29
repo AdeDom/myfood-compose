@@ -1,6 +1,7 @@
 package com.adedom.myfood.di
 
 import com.adedom.myfood.presentation.authentication.view_model.LoginViewModel
+import com.adedom.myfood.presentation.authentication.view_model.RegisterViewModel
 import com.adedom.myfood.presentation.main.view_model.MainViewModel
 import com.adedom.myfood.presentation.splash_screen.view_model.SplashScreenViewModel
 import com.adedom.myfood.presentation.welcome.view_model.WelcomeViewModel
@@ -14,4 +15,5 @@ val presentationModule = DI.Module(name = "presentation") {
     bindProvider { SplashScreenViewModel(instance()) }
     bindProvider { WelcomeViewModel() }
     bindProvider { LoginViewModel() }
+    bindProvider { RegisterViewModel() }
 }
