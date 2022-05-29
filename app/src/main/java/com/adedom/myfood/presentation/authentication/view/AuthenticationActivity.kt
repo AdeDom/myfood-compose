@@ -19,13 +19,21 @@ class AuthenticationActivity : BaseActivity() {
         val page = intent.getStringExtra(AppConstant.PAGE)
 
         if (page == AppConstant.LOGIN_PAGE) {
-            supportFragmentManager.commit {
-                replace(binding.frameLayout.id, LoginFragment.newInstant())
-            }
+            openLoginPage()
         } else {
-            supportFragmentManager.commit {
-                replace(binding.frameLayout.id, RegisterFragment.newInstant())
-            }
+            openRegisterPage()
+        }
+    }
+
+    fun openLoginPage() {
+        supportFragmentManager.commit {
+            replace(binding.frameLayout.id, LoginFragment.newInstant())
+        }
+    }
+
+    fun openRegisterPage() {
+        supportFragmentManager.commit {
+            replace(binding.frameLayout.id, RegisterFragment.newInstant())
         }
     }
 }
