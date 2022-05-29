@@ -36,8 +36,8 @@ class LoginViewModel(
                             LoginUiState.Register
                         }
                     }
-                    LoginUiAction.Login -> {
-                        callLogin()
+                    is LoginUiAction.Login -> {
+                        callLogin(uiAction.email, uiAction.password)
                     }
                 }
             }
@@ -58,9 +58,9 @@ class LoginViewModel(
         }
     }
 
-    fun loginAction() {
+    fun loginAction(email: String, password: String) {
         viewModelScope.launch {
-            val action = LoginUiAction.Login
+            val action = LoginUiAction.Login(email, password)
             _uiAction.emit(action)
         }
     }
@@ -72,12 +72,12 @@ class LoginViewModel(
         }
     }
 
-    private fun callLogin() {
+    private fun callLogin(email: String, password: String) {
         viewModelScope.launch {
             _uiState.update {
                 LoginUiState.ShowLoading
             }
-            val resource = loginUseCase("dom6", "dom5")
+            val resource = loginUseCase(email, password)
             when (resource) {
                 is Resource.Success -> {
                     _uiState.update {

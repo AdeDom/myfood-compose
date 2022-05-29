@@ -99,7 +99,9 @@ class LoginFragment : BaseFragment() {
         }
 
         binding.btnLogin.setOnClickListener {
-            viewModel.loginAction()
+            val email = binding.edtEmail.text.toString().trim()
+            val password = binding.edtPassword.text.toString().trim()
+            viewModel.loginAction(email, password)
         }
 
         binding.tvSignUp.setOnClickListener {

@@ -9,7 +9,10 @@ sealed interface LoginUiAction {
         val password: String
     ) : LoginUiAction
 
-    object Login : LoginUiAction
+    data class Login(
+        val email: String,
+        val password: String,
+    ) : LoginUiAction
 
     object Register : LoginUiAction
 }
