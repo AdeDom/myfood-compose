@@ -1,9 +1,12 @@
 package com.adedom.myfood.presentation.authentication.view
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -11,6 +14,7 @@ import com.adedom.myfood.base.BaseFragment
 import com.adedom.myfood.databinding.FragmentLoginBinding
 import com.adedom.myfood.presentation.authentication.state.LoginUiState
 import com.adedom.myfood.presentation.authentication.view_model.LoginViewModel
+import com.adedom.myfood.presentation.main.view.MainActivity
 import kotlinx.coroutines.launch
 import org.kodein.di.instance
 
@@ -42,9 +46,20 @@ class LoginFragment : BaseFragment() {
                     when (uiState) {
                         LoginUiState.Initial -> {
                         }
+                        is LoginUiState.Loading -> {
+                            binding.progressBar.isVisible = uiState.isLoading
+                        }
                         LoginUiState.Register -> {
                             val authenticationActivity = activity as? AuthenticationActivity
                             authenticationActivity?.openRegisterPage()
+                        }
+                        LoginUiState.LoginSuccess -> {
+                            val intent = Intent(context, MainActivity::class.java)
+                            startActivity(intent)
+                            activity?.finishAffinity()
+                        }
+                        is LoginUiState.LoginError -> {
+                            Toast.makeText(context, uiState.error, Toast.LENGTH_SHORT).show()
                         }
                     }
                 }
@@ -53,6 +68,10 @@ class LoginFragment : BaseFragment() {
     }
 
     override fun setupAction() {
+        binding.btnLogin.setOnClickListener {
+            viewModel.loginAction()
+        }
+
         binding.tvSignUp.setOnClickListener {
             viewModel.registerAction()
         }
