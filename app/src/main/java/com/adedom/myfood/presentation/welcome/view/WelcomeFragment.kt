@@ -39,7 +39,7 @@ class WelcomeFragment : BaseFragment() {
         return binding.root
     }
 
-    override fun setupViewModel() {
+    override fun setupUiState() {
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collect { uiState ->
@@ -69,7 +69,7 @@ class WelcomeFragment : BaseFragment() {
         }
     }
 
-    override fun setupAction() {
+    override fun setupUiAction() {
         binding.btnLogin.setOnClickListener {
             viewModel.loginAction()
         }

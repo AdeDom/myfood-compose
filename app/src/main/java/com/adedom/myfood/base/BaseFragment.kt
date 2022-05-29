@@ -14,14 +14,14 @@ abstract class BaseFragment : Fragment(), DIAware {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setupViewModel()
+        setupUiState()
         setupInitial()
-        setupAction()
+        setupUiAction()
     }
 
-    open fun setupViewModel() {}
+    open fun setupUiState() {}
 
     open fun setupInitial() {}
 
-    open fun setupAction() {}
+    open fun setupUiAction() {}
 }

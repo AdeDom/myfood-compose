@@ -35,7 +35,7 @@ class RegisterFragment : BaseFragment() {
         return binding.root
     }
 
-    override fun setupViewModel() {
+    override fun setupUiState() {
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collect { uiState ->
@@ -52,7 +52,7 @@ class RegisterFragment : BaseFragment() {
         }
     }
 
-    override fun setupAction() {
+    override fun setupUiAction() {
         binding.tvLogin.setOnClickListener {
             viewModel.loginAction()
         }

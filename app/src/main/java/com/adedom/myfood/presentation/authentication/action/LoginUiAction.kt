@@ -9,6 +9,11 @@ sealed interface LoginUiAction {
         val password: String
     ) : LoginUiAction
 
+    data class ValidateLoginButton(
+        val email: String,
+        val password: String,
+    ) : LoginUiAction
+
     data class Login(
         val email: String,
         val password: String,

@@ -13,9 +13,9 @@ sealed interface LoginUiState {
 
     object PasswordFailed : LoginUiState
 
-    object ShowLoading : LoginUiState
+    object ValidateLoginButton : LoginUiState
 
-    object HideLoading : LoginUiState
+    object ShowLoading : LoginUiState
 
     object LoginSuccess : LoginUiState
 

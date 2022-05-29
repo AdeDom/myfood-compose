@@ -40,7 +40,7 @@ class SplashScreenFragment : BaseFragment() {
         return binding.root
     }
 
-    override fun setupViewModel() {
+    override fun setupUiState() {
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collect { uiState ->

@@ -41,34 +41,45 @@ class LoginFragment : BaseFragment() {
         return binding.root
     }
 
-    override fun setupViewModel() {
+    override fun setupUiState() {
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collect { uiState ->
                     when (uiState) {
                         LoginUiState.Initial -> {
+                            binding.btnLogin.setBackgroundResource(R.drawable.shape_overlay_button_grey)
+                            binding.btnLogin.isClickable = false
                         }
                         LoginUiState.EmailSuccess -> {
                             binding.tvErrorEmail.isVisible = false
+                            val email = binding.edtEmail.text.toString().trim()
+                            val password = binding.edtPassword.text.toString().trim()
+                            viewModel.validateLoginButtonAction(email, password)
                         }
                         LoginUiState.EmailFailed -> {
                             binding.tvErrorEmail.isVisible = true
+                            binding.btnLogin.setBackgroundResource(R.drawable.shape_overlay_button_grey)
+                            binding.btnLogin.isClickable = false
                         }
                         LoginUiState.PasswordSuccess -> {
                             binding.tvErrorPassword.isVisible = false
+                            val email = binding.edtEmail.text.toString().trim()
+                            val password = binding.edtPassword.text.toString().trim()
+                            viewModel.validateLoginButtonAction(email, password)
                         }
                         LoginUiState.PasswordFailed -> {
                             binding.tvErrorPassword.isVisible = true
+                            binding.btnLogin.setBackgroundResource(R.drawable.shape_overlay_button_grey)
+                            binding.btnLogin.isClickable = false
+                        }
+                        LoginUiState.ValidateLoginButton -> {
+                            binding.btnLogin.setBackgroundResource(R.drawable.shape_overlay_button_yellow)
+                            binding.btnLogin.isClickable = true
                         }
                         LoginUiState.ShowLoading -> {
                             binding.progressBar.isVisible = true
                             binding.btnLogin.setBackgroundResource(R.drawable.shape_overlay_button_grey)
                             binding.btnLogin.isClickable = false
-                        }
-                        LoginUiState.HideLoading -> {
-                            binding.progressBar.isVisible = false
-                            binding.btnLogin.setBackgroundResource(R.drawable.shape_overlay_button_yellow)
-                            binding.btnLogin.isClickable = true
                         }
                         LoginUiState.Register -> {
                             val authenticationActivity = activity as? AuthenticationActivity
@@ -80,6 +91,9 @@ class LoginFragment : BaseFragment() {
                             activity?.finishAffinity()
                         }
                         is LoginUiState.LoginError -> {
+                            binding.progressBar.isVisible = false
+                            binding.btnLogin.setBackgroundResource(R.drawable.shape_overlay_button_yellow)
+                            binding.btnLogin.isClickable = true
                             val errorMessage = uiState.error.message ?: uiState.error.code.orEmpty()
                             Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
                         }
@@ -89,7 +103,7 @@ class LoginFragment : BaseFragment() {
         }
     }
 
-    override fun setupAction() {
+    override fun setupUiAction() {
         binding.edtEmail.addTextChangedListener { email ->
             viewModel.emailAction(email.toString())
         }

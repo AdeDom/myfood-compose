@@ -31,6 +31,15 @@ class LoginViewModel(
                             if (isValidatePassword) LoginUiState.PasswordSuccess else LoginUiState.PasswordFailed
                         }
                     }
+                    is LoginUiAction.ValidateLoginButton -> {
+                        val isValidateEmail = loginUseCase.isValidateEmail(uiAction.email)
+                        val isValidatePassword = loginUseCase.isValidatePassword(uiAction.password)
+                        if (isValidateEmail && isValidatePassword) {
+                            _uiState.update {
+                                LoginUiState.ValidateLoginButton
+                            }
+                        }
+                    }
                     LoginUiAction.Register -> {
                         _uiState.update {
                             LoginUiState.Register
@@ -54,6 +63,13 @@ class LoginViewModel(
     fun passwordAction(password: String) {
         viewModelScope.launch {
             val action = LoginUiAction.Password(password)
+            _uiAction.emit(action)
+        }
+    }
+
+    fun validateLoginButtonAction(email: String, password: String) {
+        viewModelScope.launch {
+            val action = LoginUiAction.ValidateLoginButton(email, password)
             _uiAction.emit(action)
         }
     }
@@ -89,9 +105,6 @@ class LoginViewModel(
                         LoginUiState.LoginError(resource.error)
                     }
                 }
-            }
-            _uiState.update {
-                LoginUiState.HideLoading
             }
         }
     }
