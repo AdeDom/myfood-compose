@@ -1,5 +1,6 @@
 package com.adedom.data.repositories.auth
 
+import com.adedom.data.models.error.BaseError
 import com.adedom.data.models.request.login.LoginRequest
 import com.adedom.data.repositories.Resource
 import kotlinx.coroutines.coroutineScope
@@ -14,7 +15,8 @@ class AuthLoginRepositoryImpl : AuthLoginRepository {
                 Resource.Success(Unit)
             } else {
                 val errorMessage = "Email or password incorrect"
-                Resource.Error(errorMessage)
+                val baseError = BaseError(message = errorMessage)
+                Resource.Error(baseError)
             }
         }
     }

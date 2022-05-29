@@ -1,5 +1,7 @@
 package com.adedom.domain.use_cases.login
 
+import com.adedom.data.models.error.AppErrorCode
+import com.adedom.data.models.error.BaseError
 import com.adedom.data.models.request.login.LoginRequest
 import com.adedom.data.repositories.Resource
 import com.adedom.data.repositories.auth.AuthLoginRepository
@@ -11,20 +13,24 @@ class LoginUseCase(
     suspend operator fun invoke(email: String?, password: String?): Resource<Unit> {
         return when {
             email.isNullOrBlank() -> {
-                val messageError = "Email is null or blank."
-                Resource.Error(messageError)
+                val code = AppErrorCode.EmailIsNullOrBlank.code
+                val baseError = BaseError(code = code)
+                Resource.Error(baseError)
             }
             email.length < 4 -> {
-                val messageError = "Email is incorrect."
-                Resource.Error(messageError)
+                val code = AppErrorCode.EmailLessThanFour.code
+                val baseError = BaseError(code = code)
+                Resource.Error(baseError)
             }
             password.isNullOrBlank() -> {
-                val messageError = "Password is null or blank."
-                Resource.Error(messageError)
+                val code = AppErrorCode.PasswordIsNullOrBlank.code
+                val baseError = BaseError(code = code)
+                Resource.Error(baseError)
             }
             password.length < 4 -> {
-                val messageError = "Password is incorrect."
-                Resource.Error(messageError)
+                val code = AppErrorCode.PasswordLessThanFour.code
+                val baseError = BaseError(code = code)
+                Resource.Error(baseError)
             }
             else -> {
                 val loginRequest = LoginRequest(email, password)

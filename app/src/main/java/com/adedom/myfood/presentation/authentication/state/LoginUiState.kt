@@ -1,5 +1,7 @@
 package com.adedom.myfood.presentation.authentication.state
 
+import com.adedom.data.models.error.BaseError
+
 sealed interface LoginUiState {
     object Initial : LoginUiState
 
@@ -18,7 +20,7 @@ sealed interface LoginUiState {
     object LoginSuccess : LoginUiState
 
     data class LoginError(
-        val error: String,
+        val error: BaseError,
     ) : LoginUiState
 
     object Register : LoginUiState

@@ -80,7 +80,8 @@ class LoginFragment : BaseFragment() {
                             activity?.finishAffinity()
                         }
                         is LoginUiState.LoginError -> {
-                            Toast.makeText(context, uiState.error, Toast.LENGTH_SHORT).show()
+                            val errorMessage = uiState.error.message ?: uiState.error.code.orEmpty()
+                            Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
                         }
                     }
                 }
