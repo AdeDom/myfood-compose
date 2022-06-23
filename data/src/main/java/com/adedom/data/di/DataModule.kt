@@ -10,6 +10,8 @@ import com.adedom.data.repositories.default_repository.DefaultRepository
 import com.adedom.data.repositories.default_repository.DefaultRepositoryImpl
 import com.adedom.data.repositories.splash_screen.SplashScreenRepository
 import com.adedom.data.repositories.splash_screen.SplashScreenRepositoryImpl
+import com.adedom.data.repositories.welcome.WelcomeRepository
+import com.adedom.data.repositories.welcome.WelcomeRepositoryImpl
 import org.kodein.di.DI
 import org.kodein.di.bindSingleton
 import org.kodein.di.instance
@@ -24,4 +26,5 @@ val dataModule = DI.Module(name = "data") {
     bindSingleton<DefaultRepository> { DefaultRepositoryImpl() }
     bindSingleton<SplashScreenRepository> { SplashScreenRepositoryImpl(instance()) }
     bindSingleton<AuthLoginRepository> { AuthLoginRepositoryImpl(instance(), instance()) }
+    bindSingleton<WelcomeRepository> { WelcomeRepositoryImpl(instance()) }
 }

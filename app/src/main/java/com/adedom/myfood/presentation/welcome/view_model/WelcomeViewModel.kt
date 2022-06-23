@@ -1,6 +1,7 @@
 package com.adedom.myfood.presentation.welcome.view_model
 
 import androidx.lifecycle.viewModelScope
+import com.adedom.domain.use_cases.welcome.WelcomeGuestRoleUseCase
 import com.adedom.myfood.base.BaseViewModel
 import com.adedom.myfood.presentation.welcome.action.WelcomeUiAction
 import com.adedom.myfood.presentation.welcome.state.WelcomeUiState
@@ -9,7 +10,9 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class WelcomeViewModel : BaseViewModel<WelcomeUiState, WelcomeUiAction>(WelcomeUiState.Initial) {
+class WelcomeViewModel(
+    private val welcomeGuestRoleUseCase: WelcomeGuestRoleUseCase,
+) : BaseViewModel<WelcomeUiState, WelcomeUiAction>(WelcomeUiState.Initial) {
 
     init {
         uiAction
@@ -31,6 +34,7 @@ class WelcomeViewModel : BaseViewModel<WelcomeUiState, WelcomeUiAction>(WelcomeU
                         }
                     }
                     WelcomeUiAction.Skip -> {
+                        welcomeGuestRoleUseCase()
                         _uiState.update {
                             WelcomeUiState.Skip
                         }
