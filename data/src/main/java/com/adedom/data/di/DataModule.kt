@@ -23,5 +23,5 @@ val dataModule = DI.Module(name = "data") {
 
     bindSingleton<DefaultRepository> { DefaultRepositoryImpl() }
     bindSingleton<SplashScreenRepository> { SplashScreenRepositoryImpl() }
-    bindSingleton<AuthLoginRepository> { AuthLoginRepositoryImpl(instance()) }
+    bindSingleton<AuthLoginRepository> { AuthLoginRepositoryImpl(instance(), instance()) }
 }
