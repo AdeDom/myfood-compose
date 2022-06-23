@@ -12,8 +12,6 @@ import com.adedom.data.repositories.auth.AuthLoginRepository
 import com.adedom.data.repositories.auth.AuthLoginRepositoryImpl
 import com.adedom.data.repositories.category.CategoryRepository
 import com.adedom.data.repositories.category.CategoryRepositoryImpl
-import com.adedom.data.repositories.default_repository.DefaultRepository
-import com.adedom.data.repositories.default_repository.DefaultRepositoryImpl
 import com.adedom.data.repositories.food.FoodRepository
 import com.adedom.data.repositories.food.FoodRepositoryImpl
 import com.adedom.data.repositories.splash_screen.SplashScreenRepository
@@ -33,7 +31,6 @@ val dataModule = DI.Module(name = "data") {
     bindSingleton<CategoryRemoteDataSource> { CategoryRemoteDataSourceImpl(instance()) }
     bindSingleton<FoodRemoteDataSource> { FoodRemoteDataSourceImpl(instance()) }
 
-    bindSingleton<DefaultRepository> { DefaultRepositoryImpl() }
     bindSingleton<SplashScreenRepository> { SplashScreenRepositoryImpl(instance()) }
     bindSingleton<AuthLoginRepository> { AuthLoginRepositoryImpl(instance(), instance()) }
     bindSingleton<WelcomeRepository> { WelcomeRepositoryImpl(instance()) }
