@@ -48,7 +48,7 @@ class SplashScreenFragment : BaseFragment() {
                         SplashScreenUiState.Initial -> {
                         }
                         is SplashScreenUiState.Authentication -> {
-                            if (uiState.isLogin) {
+                            if (uiState.isAuth) {
                                 val intent = Intent(context, MainActivity::class.java)
                                 startActivity(intent)
                                 activity?.finishAffinity()
@@ -65,6 +65,6 @@ class SplashScreenFragment : BaseFragment() {
     }
 
     override fun setupInitial() {
-        viewModel.getIsLogin()
+        viewModel.getIsAuth()
     }
 }

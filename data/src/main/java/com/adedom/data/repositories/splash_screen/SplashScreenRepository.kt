@@ -1,6 +1,8 @@
 package com.adedom.data.repositories.splash_screen
 
+import com.adedom.data.utils.AuthRole
+
 interface SplashScreenRepository {
 
-    fun isLogin(): Boolean
+    suspend fun getAuthRole(): AuthRole
 }

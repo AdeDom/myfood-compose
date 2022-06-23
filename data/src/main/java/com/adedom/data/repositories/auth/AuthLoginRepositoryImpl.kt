@@ -3,6 +3,7 @@ package com.adedom.data.repositories.auth
 import com.adedom.data.models.request.login.LoginRequest
 import com.adedom.data.providers.data_store.AppDataStore
 import com.adedom.data.providers.remote.auth.AuthRemoteDataSource
+import com.adedom.data.utils.AuthRole
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -14,10 +15,17 @@ class AuthLoginRepositoryImpl(
     override suspend fun callLogin(loginRequest: LoginRequest) {
         return withContext(Dispatchers.IO) {
             val loginResponse = authRemoteDataSource.callLogin(loginRequest)
+
             val accessToken = loginResponse.result?.accessToken.orEmpty()
             val refreshToken = loginResponse.result?.refreshToken.orEmpty()
             appDataStore.setAccessToken(accessToken)
             appDataStore.setRefreshToken(refreshToken)
+
+            val isAuthRole = accessToken.isNotEmpty() && refreshToken.isNotEmpty()
+            if (isAuthRole) {
+                val authRole = AuthRole.Auth
+                appDataStore.setAuthRole(authRole)
+            }
         }
     }
 }
