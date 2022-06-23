@@ -7,7 +7,9 @@ import io.ktor.client.features.json.*
 import io.ktor.client.features.json.serializer.*
 import io.ktor.client.features.logging.*
 
-class DataSourceProvider {
+class DataSourceProvider(
+    private val apiServiceInterceptor: ApiServiceInterceptor,
+) {
 
     fun getBaseUrl(): String {
         return "https://myfood-server.herokuapp.com/"
@@ -16,6 +18,7 @@ class DataSourceProvider {
     fun getHttpClient(dataSourceType: DataSourceType): HttpClient {
         return HttpClient(OkHttp) {
             engine {
+                addInterceptor(apiServiceInterceptor)
                 if (dataSourceType == DataSourceType.AUTHORIZATION) {
                     addInterceptor { chain ->
                         val request = chain.request()

@@ -1,6 +1,7 @@
 package com.adedom.myfood.presentation.authentication.view_model
 
 import androidx.lifecycle.viewModelScope
+import com.adedom.data.utils.ApiServiceException
 import com.adedom.data.utils.UseCaseException
 import com.adedom.data.utils.toBaseError
 import com.adedom.domain.use_cases.login.LoginUseCase
@@ -102,6 +103,11 @@ class LoginViewModel(
                     LoginUiState.LoginSuccess
                 }
             } catch (ex: UseCaseException) {
+                val baseError = ex.toBaseError()
+                _uiState.update {
+                    LoginUiState.LoginError(baseError)
+                }
+            } catch (ex: ApiServiceException) {
                 val baseError = ex.toBaseError()
                 _uiState.update {
                     LoginUiState.LoginError(baseError)
