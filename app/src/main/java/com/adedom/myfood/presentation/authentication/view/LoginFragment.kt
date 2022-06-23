@@ -94,7 +94,7 @@ class LoginFragment : BaseFragment() {
                             binding.progressBar.isVisible = false
                             binding.btnLogin.setBackgroundResource(R.drawable.shape_overlay_button_yellow)
                             binding.btnLogin.isClickable = true
-                            val errorMessage = uiState.error.message ?: uiState.error.code.orEmpty()
+                            val errorMessage = uiState.error?.message ?: uiState.error?.code.orEmpty()
                             Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
                         }
                     }

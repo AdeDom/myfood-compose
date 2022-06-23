@@ -20,7 +20,7 @@ sealed interface LoginUiState {
     object LoginSuccess : LoginUiState
 
     data class LoginError(
-        val error: BaseError,
+        val error: BaseError?,
     ) : LoginUiState
 
     object Register : LoginUiState

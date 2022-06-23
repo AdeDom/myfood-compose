@@ -1,7 +1,8 @@
 package com.adedom.myfood.presentation.authentication.view_model
 
 import androidx.lifecycle.viewModelScope
-import com.adedom.data.repositories.Resource
+import com.adedom.data.utils.UseCaseException
+import com.adedom.data.utils.toBaseError
 import com.adedom.domain.use_cases.login.LoginUseCase
 import com.adedom.myfood.base.BaseViewModel
 import com.adedom.myfood.presentation.authentication.action.LoginUiAction
@@ -90,20 +91,20 @@ class LoginViewModel(
 
     private fun callLogin(email: String, password: String) {
         viewModelScope.launch {
-            _uiState.update {
-                LoginUiState.ShowLoading
-            }
-            val resource = loginUseCase(email, password)
-            when (resource) {
-                is Resource.Success -> {
-                    _uiState.update {
-                        LoginUiState.LoginSuccess
-                    }
+            try {
+                _uiState.update {
+                    LoginUiState.ShowLoading
                 }
-                is Resource.Error -> {
-                    _uiState.update {
-                        LoginUiState.LoginError(resource.error)
-                    }
+
+                loginUseCase(email, password)
+
+                _uiState.update {
+                    LoginUiState.LoginSuccess
+                }
+            } catch (ex: UseCaseException) {
+                val baseError = ex.toBaseError()
+                _uiState.update {
+                    LoginUiState.LoginError(baseError)
                 }
             }
         }
