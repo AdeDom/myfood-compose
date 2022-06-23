@@ -4,8 +4,12 @@ import com.adedom.data.providers.remote.ApiServiceInterceptor
 import com.adedom.data.providers.remote.DataSourceProvider
 import com.adedom.data.providers.remote.auth.AuthRemoteDataSource
 import com.adedom.data.providers.remote.auth.AuthRemoteDataSourceImpl
+import com.adedom.data.providers.remote.category.CategoryRemoteDataSource
+import com.adedom.data.providers.remote.category.CategoryRemoteDataSourceImpl
 import com.adedom.data.repositories.auth.AuthLoginRepository
 import com.adedom.data.repositories.auth.AuthLoginRepositoryImpl
+import com.adedom.data.repositories.category.CategoryRepository
+import com.adedom.data.repositories.category.CategoryRepositoryImpl
 import com.adedom.data.repositories.default_repository.DefaultRepository
 import com.adedom.data.repositories.default_repository.DefaultRepositoryImpl
 import com.adedom.data.repositories.splash_screen.SplashScreenRepository
@@ -22,9 +26,11 @@ val dataModule = DI.Module(name = "data") {
     bindSingleton { DataSourceProvider(instance()) }
 
     bindSingleton<AuthRemoteDataSource> { AuthRemoteDataSourceImpl(instance()) }
+    bindSingleton<CategoryRemoteDataSource> { CategoryRemoteDataSourceImpl(instance()) }
 
     bindSingleton<DefaultRepository> { DefaultRepositoryImpl() }
     bindSingleton<SplashScreenRepository> { SplashScreenRepositoryImpl(instance()) }
     bindSingleton<AuthLoginRepository> { AuthLoginRepositoryImpl(instance(), instance()) }
     bindSingleton<WelcomeRepository> { WelcomeRepositoryImpl(instance()) }
+    bindSingleton<CategoryRepository> { CategoryRepositoryImpl(instance()) }
 }

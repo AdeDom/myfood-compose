@@ -28,11 +28,12 @@ class MainActivity : BaseActivity() {
                 viewModel.uiState.collect { uiState ->
                     when (uiState) {
                         is MainUiState.Initial -> {
-                            binding.tvData.text = uiState.data
                         }
                     }
                 }
             }
         }
+
+        viewModel.callApiService()
     }
 }
