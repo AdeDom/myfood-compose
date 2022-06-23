@@ -6,12 +6,16 @@ import com.adedom.data.providers.remote.auth.AuthRemoteDataSource
 import com.adedom.data.providers.remote.auth.AuthRemoteDataSourceImpl
 import com.adedom.data.providers.remote.category.CategoryRemoteDataSource
 import com.adedom.data.providers.remote.category.CategoryRemoteDataSourceImpl
+import com.adedom.data.providers.remote.food.FoodRemoteDataSource
+import com.adedom.data.providers.remote.food.FoodRemoteDataSourceImpl
 import com.adedom.data.repositories.auth.AuthLoginRepository
 import com.adedom.data.repositories.auth.AuthLoginRepositoryImpl
 import com.adedom.data.repositories.category.CategoryRepository
 import com.adedom.data.repositories.category.CategoryRepositoryImpl
 import com.adedom.data.repositories.default_repository.DefaultRepository
 import com.adedom.data.repositories.default_repository.DefaultRepositoryImpl
+import com.adedom.data.repositories.food.FoodRepository
+import com.adedom.data.repositories.food.FoodRepositoryImpl
 import com.adedom.data.repositories.splash_screen.SplashScreenRepository
 import com.adedom.data.repositories.splash_screen.SplashScreenRepositoryImpl
 import com.adedom.data.repositories.welcome.WelcomeRepository
@@ -27,10 +31,12 @@ val dataModule = DI.Module(name = "data") {
 
     bindSingleton<AuthRemoteDataSource> { AuthRemoteDataSourceImpl(instance()) }
     bindSingleton<CategoryRemoteDataSource> { CategoryRemoteDataSourceImpl(instance()) }
+    bindSingleton<FoodRemoteDataSource> { FoodRemoteDataSourceImpl(instance()) }
 
     bindSingleton<DefaultRepository> { DefaultRepositoryImpl() }
     bindSingleton<SplashScreenRepository> { SplashScreenRepositoryImpl(instance()) }
     bindSingleton<AuthLoginRepository> { AuthLoginRepositoryImpl(instance(), instance()) }
     bindSingleton<WelcomeRepository> { WelcomeRepositoryImpl(instance()) }
     bindSingleton<CategoryRepository> { CategoryRepositoryImpl(instance()) }
+    bindSingleton<FoodRepository> { FoodRepositoryImpl(instance()) }
 }

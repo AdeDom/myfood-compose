@@ -30,7 +30,9 @@ class DataSourceProvider(
             }
 
             install(JsonFeature) {
-                serializer = KotlinxSerializer()
+                serializer = KotlinxSerializer(kotlinx.serialization.json.Json {
+                    ignoreUnknownKeys = true
+                })
             }
 
             install(HttpTimeout) {
