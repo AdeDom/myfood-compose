@@ -34,7 +34,16 @@ class LoginUseCase(
             }
             else -> {
                 val loginRequest = LoginRequest(email, password)
-                authLoginRepository.callLogin(loginRequest)
+                val code = AppErrorCode.TokenIsNull.code
+                val baseError = BaseError(code = code)
+                val (accessToken, refreshToken) = authLoginRepository.callLogin(loginRequest)
+                    ?: throw UseCaseException(baseError)
+                if (accessToken.isNullOrBlank() || refreshToken.isNullOrBlank()) {
+                    throw UseCaseException(baseError)
+                } else {
+                    authLoginRepository.saveToken(accessToken, refreshToken)
+                    authLoginRepository.saveAuthRole()
+                }
             }
         }
     }

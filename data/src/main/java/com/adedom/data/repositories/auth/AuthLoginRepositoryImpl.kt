@@ -1,6 +1,7 @@
 package com.adedom.data.repositories.auth
 
 import com.adedom.data.models.request.login.LoginRequest
+import com.adedom.data.models.response.token.TokenResponse
 import com.adedom.data.providers.data_store.AppDataStore
 import com.adedom.data.providers.remote.auth.AuthRemoteDataSource
 import com.adedom.data.utils.AuthRole
@@ -12,20 +13,24 @@ class AuthLoginRepositoryImpl(
     private val authRemoteDataSource: AuthRemoteDataSource,
 ) : AuthLoginRepository {
 
-    override suspend fun callLogin(loginRequest: LoginRequest) {
+    override suspend fun callLogin(loginRequest: LoginRequest): TokenResponse? {
         return withContext(Dispatchers.IO) {
             val loginResponse = authRemoteDataSource.callLogin(loginRequest)
+            loginResponse.result
+        }
+    }
 
-            val accessToken = loginResponse.result?.accessToken.orEmpty()
-            val refreshToken = loginResponse.result?.refreshToken.orEmpty()
+    override suspend fun saveToken(accessToken: String, refreshToken: String) {
+        return withContext(Dispatchers.IO) {
             appDataStore.setAccessToken(accessToken)
             appDataStore.setRefreshToken(refreshToken)
+        }
+    }
 
-            val isAuthRole = accessToken.isNotEmpty() && refreshToken.isNotEmpty()
-            if (isAuthRole) {
-                val authRole = AuthRole.Auth
-                appDataStore.setAuthRole(authRole)
-            }
+    override suspend fun saveAuthRole() {
+        return withContext(Dispatchers.IO) {
+            val authRole = AuthRole.Auth
+            appDataStore.setAuthRole(authRole)
         }
     }
 }
