@@ -2,8 +2,7 @@ package com.adedom.domain.use_cases.main
 
 import com.adedom.data.models.response.category.Category
 import com.adedom.data.models.response.food.Food
-import com.adedom.data.repositories.category.CategoryRepository
-import com.adedom.data.repositories.food.FoodRepository
+import com.adedom.data.repositories.home.HomeRepository
 import com.adedom.domain.models.category.CategoryModel
 import com.adedom.domain.models.food.FoodModel
 import com.adedom.domain.models.main.MainPageModel
@@ -12,20 +11,19 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 
 class MainPageUseCase(
-    private val categoryRepository: CategoryRepository,
-    private val foodRepository: FoodRepository,
+    private val homeRepository: HomeRepository,
 ) {
 
     suspend operator fun invoke(): MainPageModel {
         return coroutineScope {
-            val categoryAll = categoryRepository.callCategoryAll()
+            val categoryAll = homeRepository.callCategoryAll()
 
             val categoryList = categoryAll.map { mapCategoryToCategoryModel(it) }
 
             val foodList = categoryAll
                 .map { category ->
                     async {
-                        foodRepository.callFoodListByCategoryId(
+                        homeRepository.callFoodListByCategoryId(
                             categoryId = category.categoryId ?: CATEGORY_RECOMMEND
                         )
                     }
