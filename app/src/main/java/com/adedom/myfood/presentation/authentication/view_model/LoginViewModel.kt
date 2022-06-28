@@ -3,11 +3,11 @@ package com.adedom.myfood.presentation.authentication.view_model
 import androidx.lifecycle.viewModelScope
 import com.adedom.data.utils.ApiServiceException
 import com.adedom.data.utils.UseCaseException
-import com.adedom.data.utils.toBaseError
 import com.adedom.domain.use_cases.login.LoginUseCase
 import com.adedom.myfood.base.BaseViewModel
 import com.adedom.myfood.presentation.authentication.action.LoginUiAction
 import com.adedom.myfood.presentation.authentication.state.LoginUiState
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
@@ -16,6 +16,23 @@ import kotlinx.coroutines.launch
 class LoginViewModel(
     private val loginUseCase: LoginUseCase,
 ) : BaseViewModel<LoginUiState, LoginUiAction>(LoginUiState.Initial) {
+
+    private val exceptionHandler = CoroutineExceptionHandler { _, error ->
+        error.printStackTrace()
+
+        when (error) {
+            is ApiServiceException -> {
+                _uiState.update {
+                    LoginUiState.LoginError(error.toBaseError())
+                }
+            }
+            is UseCaseException -> {
+                _uiState.update {
+                    LoginUiState.LoginError(error.toBaseError())
+                }
+            }
+        }
+    }
 
     init {
         uiAction
@@ -91,27 +108,15 @@ class LoginViewModel(
     }
 
     private fun callLogin(email: String, password: String) {
-        viewModelScope.launch {
-            try {
-                _uiState.update {
-                    LoginUiState.ShowLoading
-                }
+        viewModelScope.launch(exceptionHandler) {
+            _uiState.update {
+                LoginUiState.ShowLoading
+            }
 
-                loginUseCase(email, password)
+            loginUseCase(email, password)
 
-                _uiState.update {
-                    LoginUiState.LoginSuccess
-                }
-            } catch (ex: UseCaseException) {
-                val baseError = ex.toBaseError()
-                _uiState.update {
-                    LoginUiState.LoginError(baseError)
-                }
-            } catch (ex: ApiServiceException) {
-                val baseError = ex.toBaseError()
-                _uiState.update {
-                    LoginUiState.LoginError(baseError)
-                }
+            _uiState.update {
+                LoginUiState.LoginSuccess
             }
         }
     }
