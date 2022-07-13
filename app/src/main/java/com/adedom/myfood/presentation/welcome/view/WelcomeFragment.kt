@@ -50,13 +50,11 @@ class WelcomeFragment : BaseFragment() {
                             val intent = Intent(context, AuthenticationActivity::class.java)
                             intent.putExtra(AppConstant.PAGE, AppConstant.LOGIN_PAGE)
                             startActivity(intent)
-                            viewModel.initialAction()
                         }
                         WelcomeUiState.Register -> {
                             val intent = Intent(context, AuthenticationActivity::class.java)
                             intent.putExtra(AppConstant.PAGE, AppConstant.REGISTER_PAGE)
                             startActivity(intent)
-                            viewModel.initialAction()
                         }
                         WelcomeUiState.Skip -> {
                             val intent = Intent(context, MainActivity::class.java)

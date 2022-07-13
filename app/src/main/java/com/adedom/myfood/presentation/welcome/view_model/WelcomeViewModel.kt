@@ -15,14 +15,17 @@ class WelcomeViewModel(
 ) : BaseViewModel<WelcomeUiState, WelcomeUiAction>(WelcomeUiState.Initial) {
 
     init {
+        uiState
+            .onEach {
+                _uiState.update {
+                    WelcomeUiState.Initial
+                }
+            }
+            .launchIn(viewModelScope)
+
         uiAction
             .onEach { uiAction ->
                 when (uiAction) {
-                    WelcomeUiAction.Initial -> {
-                        _uiState.update {
-                            WelcomeUiState.Initial
-                        }
-                    }
                     WelcomeUiAction.Login -> {
                         _uiState.update {
                             WelcomeUiState.Login
@@ -42,13 +45,6 @@ class WelcomeViewModel(
                 }
             }
             .launchIn(viewModelScope)
-    }
-
-    fun initialAction() {
-        viewModelScope.launch {
-            val action = WelcomeUiAction.Initial
-            _uiAction.emit(action)
-        }
     }
 
     fun loginAction() {
