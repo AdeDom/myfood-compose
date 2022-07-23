@@ -1,4 +1,4 @@
-package com.adedom.data.repositories
+package com.adedom.data.utils
 
 import com.adedom.data.models.error.BaseError
 

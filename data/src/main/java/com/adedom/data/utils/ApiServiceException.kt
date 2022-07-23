@@ -7,9 +7,9 @@ import java.io.IOException
 
 class ApiServiceException(baseError: BaseError) : IOException(baseError.toString()) {
 
-    fun toBaseError(): BaseError? {
+    fun toBaseError(): BaseError {
         return message?.let { msg ->
-            Json.decodeFromString<BaseError>(msg)
-        }
+            Json.decodeFromString(msg)
+        } ?: BaseError(message = message)
     }
 }
