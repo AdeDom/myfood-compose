@@ -15,27 +15,9 @@ class WelcomeViewModel(
 ) : BaseViewModel<WelcomeUiState, WelcomeUiAction>(WelcomeUiState.Initial) {
 
     init {
-        uiState
-            .onEach {
-                _uiState.update {
-                    WelcomeUiState.Initial
-                }
-            }
-            .launchIn(viewModelScope)
-
         uiAction
             .onEach { uiAction ->
                 when (uiAction) {
-                    WelcomeUiAction.Login -> {
-                        _uiState.update {
-                            WelcomeUiState.Login
-                        }
-                    }
-                    WelcomeUiAction.Register -> {
-                        _uiState.update {
-                            WelcomeUiState.Register
-                        }
-                    }
                     WelcomeUiAction.Skip -> {
                         welcomeGuestRoleUseCase()
                         _uiState.update {
@@ -45,20 +27,6 @@ class WelcomeViewModel(
                 }
             }
             .launchIn(viewModelScope)
-    }
-
-    fun loginAction() {
-        viewModelScope.launch {
-            val action = WelcomeUiAction.Login
-            _uiAction.emit(action)
-        }
-    }
-
-    fun registerAction() {
-        viewModelScope.launch {
-            val action = WelcomeUiAction.Register
-            _uiAction.emit(action)
-        }
     }
 
     fun skipAction() {

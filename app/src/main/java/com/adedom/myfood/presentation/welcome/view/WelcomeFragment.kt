@@ -46,16 +46,6 @@ class WelcomeFragment : BaseFragment() {
                     when (uiState) {
                         WelcomeUiState.Initial -> {
                         }
-                        WelcomeUiState.Login -> {
-                            val intent = Intent(context, AuthenticationActivity::class.java)
-                            intent.putExtra(AppConstant.PAGE, AppConstant.LOGIN_PAGE)
-                            startActivity(intent)
-                        }
-                        WelcomeUiState.Register -> {
-                            val intent = Intent(context, AuthenticationActivity::class.java)
-                            intent.putExtra(AppConstant.PAGE, AppConstant.REGISTER_PAGE)
-                            startActivity(intent)
-                        }
                         WelcomeUiState.Skip -> {
                             val intent = Intent(context, MainActivity::class.java)
                             startActivity(intent)
@@ -69,11 +59,15 @@ class WelcomeFragment : BaseFragment() {
 
     override fun setupUiAction() {
         binding.btnLogin.setOnClickListener {
-            viewModel.loginAction()
+            val intent = Intent(context, AuthenticationActivity::class.java)
+            intent.putExtra(AppConstant.PAGE, AppConstant.LOGIN_PAGE)
+            startActivity(intent)
         }
 
         binding.btnRegister.setOnClickListener {
-            viewModel.registerAction()
+            val intent = Intent(context, AuthenticationActivity::class.java)
+            intent.putExtra(AppConstant.PAGE, AppConstant.REGISTER_PAGE)
+            startActivity(intent)
         }
 
         binding.tvSkip.setOnClickListener {
