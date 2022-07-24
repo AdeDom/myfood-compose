@@ -12,7 +12,6 @@ import com.adedom.myfood.base.BaseFragment
 import com.adedom.myfood.databinding.FragmentWelcomeBinding
 import com.adedom.myfood.presentation.authentication.view.AuthenticationActivity
 import com.adedom.myfood.presentation.main.view.MainActivity
-import com.adedom.myfood.presentation.welcome.state.WelcomeUiState
 import com.adedom.myfood.presentation.welcome.view_model.WelcomeViewModel
 import com.adedom.myfood.utils.constant.AppConstant
 import kotlinx.coroutines.launch
@@ -42,16 +41,10 @@ class WelcomeFragment : BaseFragment() {
     override fun setupUiState() {
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.uiState.collect { uiState ->
-                    when (uiState) {
-                        WelcomeUiState.Initial -> {
-                        }
-                        WelcomeUiState.Skip -> {
-                            val intent = Intent(context, MainActivity::class.java)
-                            startActivity(intent)
-                            activity?.finishAffinity()
-                        }
-                    }
+                viewModel.skipChannel.collect {
+                    val intent = Intent(context, MainActivity::class.java)
+                    startActivity(intent)
+                    activity?.finishAffinity()
                 }
             }
         }

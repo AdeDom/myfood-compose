@@ -5,34 +5,20 @@ import com.adedom.domain.use_cases.welcome.WelcomeGuestRoleUseCase
 import com.adedom.myfood.base.BaseViewModel
 import com.adedom.myfood.presentation.welcome.action.WelcomeUiAction
 import com.adedom.myfood.presentation.welcome.state.WelcomeUiState
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 class WelcomeViewModel(
     private val welcomeGuestRoleUseCase: WelcomeGuestRoleUseCase,
 ) : BaseViewModel<WelcomeUiState, WelcomeUiAction>(WelcomeUiState.Initial) {
 
-    init {
-        uiAction
-            .onEach { uiAction ->
-                when (uiAction) {
-                    WelcomeUiAction.Skip -> {
-                        welcomeGuestRoleUseCase()
-                        _uiState.update {
-                            WelcomeUiState.Skip
-                        }
-                    }
-                }
-            }
-            .launchIn(viewModelScope)
-    }
+    private val _skipChannel = Channel<Unit>()
+    val skipChannel = _skipChannel.receiveAsFlow()
 
     fun skipAction() {
         viewModelScope.launch {
-            val action = WelcomeUiAction.Skip
-            _uiAction.emit(action)
+            _skipChannel.send(welcomeGuestRoleUseCase())
         }
     }
 }
