@@ -47,16 +47,15 @@ class SplashScreenFragment : BaseFragment() {
                     when (uiState) {
                         SplashScreenUiState.Initial -> {
                         }
-                        is SplashScreenUiState.Authentication -> {
-                            if (uiState.isAuth) {
-                                val intent = Intent(context, MainActivity::class.java)
-                                startActivity(intent)
-                                activity?.finishAffinity()
-                            } else {
-                                val intent = Intent(context, WelcomeActivity::class.java)
-                                startActivity(intent)
-                                activity?.finishAffinity()
-                            }
+                        SplashScreenUiState.Authentication -> {
+                            val intent = Intent(context, MainActivity::class.java)
+                            startActivity(intent)
+                            activity?.finishAffinity()
+                        }
+                        SplashScreenUiState.UnAuthentication -> {
+                            val intent = Intent(context, WelcomeActivity::class.java)
+                            startActivity(intent)
+                            activity?.finishAffinity()
                         }
                     }
                 }

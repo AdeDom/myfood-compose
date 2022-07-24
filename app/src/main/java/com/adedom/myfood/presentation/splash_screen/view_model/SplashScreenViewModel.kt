@@ -16,8 +16,15 @@ class SplashScreenViewModel(
     fun getIsAuth() {
         viewModelScope.launch {
             delay(2_000)
-            _uiState.update {
-                SplashScreenUiState.Authentication(getIsAuthUseCase())
+            val isAuth = getIsAuthUseCase()
+            if (isAuth) {
+                _uiState.update {
+                    SplashScreenUiState.Authentication
+                }
+            } else {
+                _uiState.update {
+                    SplashScreenUiState.UnAuthentication
+                }
             }
         }
     }
