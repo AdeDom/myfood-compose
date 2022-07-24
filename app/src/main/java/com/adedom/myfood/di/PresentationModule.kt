@@ -14,6 +14,6 @@ val presentationModule = DI.Module(name = "presentation") {
     bindProvider { MainViewModel(instance()) }
     bindProvider { SplashScreenViewModel(instance()) }
     bindProvider { WelcomeViewModel(instance()) }
-    bindProvider { LoginViewModel(instance()) }
+    bindProvider { LoginViewModel(instance(), instance(), instance()) }
     bindProvider { RegisterViewModel() }
 }
