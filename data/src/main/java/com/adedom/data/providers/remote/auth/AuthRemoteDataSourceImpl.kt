@@ -1,5 +1,6 @@
 package com.adedom.data.providers.remote.auth
 
+import com.adedom.data.BuildConfig
 import com.adedom.data.models.request.login.LoginRequest
 import com.adedom.data.models.response.BaseResponse
 import com.adedom.data.models.response.token.TokenResponse
@@ -17,12 +18,12 @@ class AuthRemoteDataSourceImpl(
 
     override suspend fun callTestAuth(): BaseResponse<String> {
         return dataSourceProvider.getHttpClient(DataSourceType.AUTHORIZATION)
-            .get(dataSourceProvider.getBaseUrl() + "api/auth")
+            .get(BuildConfig.BASE_URL + "api/auth")
     }
 
     override suspend fun callLogin(loginRequest: LoginRequest): BaseResponse<TokenResponse> {
         return dataSourceProvider.getHttpClient(DataSourceType.UN_AUTHORIZATION)
-            .post(dataSourceProvider.getBaseUrl() + "api/auth/login") {
+            .post(BuildConfig.BASE_URL + "api/auth/login") {
                 body = TextContent(
                     text = Json.encodeToString(loginRequest),
                     contentType = ContentType.Application.Json
