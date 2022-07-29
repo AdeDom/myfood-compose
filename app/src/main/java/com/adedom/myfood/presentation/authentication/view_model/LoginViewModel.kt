@@ -8,8 +8,7 @@ import com.adedom.domain.use_cases.validate.ValidatePasswordUseCase
 import com.adedom.myfood.base.BaseViewModel
 import com.adedom.myfood.presentation.authentication.action.LoginUiAction
 import com.adedom.myfood.presentation.authentication.state.LoginUiState
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -19,91 +18,58 @@ class LoginViewModel(
     private val loginUseCase: LoginUseCase,
 ) : BaseViewModel<LoginUiState, LoginUiAction>(LoginUiState.Initial) {
 
-    init {
-        uiAction
-            .onEach { uiAction ->
-                when (uiAction) {
-                    is LoginUiAction.Email -> {
-                        val isValidateEmail = validateEmailUseCase(uiAction.email)
-                        _uiState.update {
-                            if (isValidateEmail) LoginUiState.EmailSuccess else LoginUiState.EmailFailed
-                        }
-                    }
-                    is LoginUiAction.Password -> {
-                        val isValidatePassword = validatePasswordUseCase(uiAction.password)
-                        _uiState.update {
-                            if (isValidatePassword) LoginUiState.PasswordSuccess else LoginUiState.PasswordFailed
-                        }
-                    }
-                    is LoginUiAction.ValidateLoginButton -> {
-                        val isValidateEmail = validateEmailUseCase(uiAction.email)
-                        val isValidatePassword = validatePasswordUseCase(uiAction.password)
-                        if (isValidateEmail && isValidatePassword) {
-                            _uiState.update {
-                                LoginUiState.ValidateLoginButton
-                            }
-                        }
-                    }
-                    LoginUiAction.Register -> {
-                        _uiState.update {
-                            LoginUiState.Register
-                        }
-                    }
-                    is LoginUiAction.Login -> {
-                        callLogin(uiAction.email, uiAction.password)
-                    }
-                }
-            }
-            .launchIn(viewModelScope)
-    }
+    private val _form = MutableStateFlow(LoginUiState.LoginForm())
 
-    fun emailAction(email: String) {
-        viewModelScope.launch {
-            val action = LoginUiAction.Email(email)
-            _uiAction.emit(action)
+    fun onEmailEventToState(email: String) {
+        _form.update {
+            it.copy(
+                email = email,
+                password = it.password,
+            )
+        }
+        val isValidateEmail = validateEmailUseCase(_form.value.email)
+        val isValidatePassword = validatePasswordUseCase(_form.value.password)
+        _uiState.update {
+            LoginUiState.Email(
+                isError = !isValidateEmail,
+                isLogin = isValidateEmail && isValidatePassword,
+            )
         }
     }
 
-    fun passwordAction(password: String) {
-        viewModelScope.launch {
-            val action = LoginUiAction.Password(password)
-            _uiAction.emit(action)
+    fun onPasswordEventToState(password: String) {
+        _form.update {
+            it.copy(
+                email = it.email,
+                password = password,
+            )
+        }
+        val isValidateEmail = validateEmailUseCase(_form.value.email)
+        val isValidatePassword = validatePasswordUseCase(_form.value.password)
+        _uiState.update {
+            LoginUiState.Password(
+                isError = !isValidatePassword,
+                isLogin = isValidateEmail && isValidatePassword,
+            )
         }
     }
 
-    fun validateLoginButtonAction(email: String, password: String) {
-        viewModelScope.launch {
-            val action = LoginUiAction.ValidateLoginButton(email, password)
-            _uiAction.emit(action)
-        }
-    }
-
-    fun loginAction(email: String, password: String) {
-        viewModelScope.launch {
-            val action = LoginUiAction.Login(email, password)
-            _uiAction.emit(action)
-        }
-    }
-
-    fun registerAction() {
-        viewModelScope.launch {
-            val action = LoginUiAction.Register
-            _uiAction.emit(action)
-        }
-    }
-
-    private fun callLogin(email: String, password: String) {
+    fun onLoginEvent() {
         viewModelScope.launch {
             _uiState.update {
-                LoginUiState.ShowLoading
+                LoginUiState.Loading(
+                    isLoading = true,
+                    isLogin = false,
+                )
             }
 
+            val email = _form.value.email
+            val password = _form.value.password
             val resource = loginUseCase(email, password)
             when (resource) {
                 is Resource.Success -> {
-                    _uiState.update {
-                        LoginUiState.LoginSuccess
-                    }
+                    val event = LoginUiAction.LoginSuccess
+                    _uiAction.emit(event)
                 }
                 is Resource.Error -> {
                     _uiState.update {
@@ -111,6 +77,20 @@ class LoginViewModel(
                     }
                 }
             }
+
+            _uiState.update {
+                LoginUiState.Loading(
+                    isLoading = false,
+                    isLogin = true,
+                )
+            }
+        }
+    }
+
+    fun onRegisterEvent() {
+        viewModelScope.launch {
+            val event = LoginUiAction.Register
+            _uiAction.emit(event)
         }
     }
 }
