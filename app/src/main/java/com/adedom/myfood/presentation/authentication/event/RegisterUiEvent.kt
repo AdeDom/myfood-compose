@@ -1,4 +1,4 @@
-package com.adedom.myfood.presentation.authentication.action
+package com.adedom.myfood.presentation.authentication.event
 
 sealed interface RegisterUiEvent {
     object Login : RegisterUiEvent

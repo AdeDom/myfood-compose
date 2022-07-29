@@ -14,7 +14,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.adedom.myfood.R
 import com.adedom.myfood.base.BaseFragment
 import com.adedom.myfood.databinding.FragmentLoginBinding
-import com.adedom.myfood.presentation.authentication.action.LoginUiAction
+import com.adedom.myfood.presentation.authentication.event.LoginUiEvent
 import com.adedom.myfood.presentation.authentication.state.LoginUiState
 import com.adedom.myfood.presentation.authentication.view_model.LoginViewModel
 import com.adedom.myfood.presentation.main.view.MainActivity
@@ -89,13 +89,13 @@ class LoginFragment : BaseFragment() {
 
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.uiAction.collect { uiAction ->
-                    when (uiAction) {
-                        LoginUiAction.Register -> {
+                viewModel.uiEvent.collect { uiEvent ->
+                    when (uiEvent) {
+                        LoginUiEvent.Register -> {
                             val authenticationActivity = activity as? AuthenticationActivity
                             authenticationActivity?.openRegisterPage()
                         }
-                        LoginUiAction.LoginSuccess -> {
+                        LoginUiEvent.LoginSuccess -> {
                             val intent = Intent(context, MainActivity::class.java)
                             startActivity(intent)
                             activity?.finishAffinity()
@@ -106,7 +106,7 @@ class LoginFragment : BaseFragment() {
         }
     }
 
-    override fun setupUiAction() {
+    override fun setupUiEvent() {
         binding.edtEmail.addTextChangedListener { email ->
             viewModel.setEmail(email.toString())
             viewModel.onValidateEmail()

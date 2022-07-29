@@ -16,12 +16,12 @@ abstract class BaseFragment : Fragment(), DIAware {
 
         setupUiState()
         setupInitial()
-        setupUiAction()
+        setupUiEvent()
     }
 
     open fun setupUiState() {}
 
     open fun setupInitial() {}
 
-    open fun setupUiAction() {}
+    open fun setupUiEvent() {}
 }

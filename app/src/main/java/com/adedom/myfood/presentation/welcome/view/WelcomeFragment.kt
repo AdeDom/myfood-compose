@@ -12,7 +12,7 @@ import com.adedom.myfood.base.BaseFragment
 import com.adedom.myfood.databinding.FragmentWelcomeBinding
 import com.adedom.myfood.presentation.authentication.view.AuthenticationActivity
 import com.adedom.myfood.presentation.main.view.MainActivity
-import com.adedom.myfood.presentation.welcome.action.WelcomeUiAction
+import com.adedom.myfood.presentation.welcome.event.WelcomeUiEvent
 import com.adedom.myfood.presentation.welcome.view_model.WelcomeViewModel
 import com.adedom.myfood.utils.constant.AppConstant
 import kotlinx.coroutines.launch
@@ -42,19 +42,19 @@ class WelcomeFragment : BaseFragment() {
     override fun setupUiState() {
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.uiAction.collect { uiAction ->
-                    when (uiAction) {
-                        WelcomeUiAction.Login -> {
+                viewModel.uiEvent.collect { uiEvent ->
+                    when (uiEvent) {
+                        WelcomeUiEvent.Login -> {
                             val intent = Intent(context, AuthenticationActivity::class.java)
                             intent.putExtra(AppConstant.PAGE, AppConstant.LOGIN_PAGE)
                             startActivity(intent)
                         }
-                        WelcomeUiAction.Register -> {
+                        WelcomeUiEvent.Register -> {
                             val intent = Intent(context, AuthenticationActivity::class.java)
                             intent.putExtra(AppConstant.PAGE, AppConstant.REGISTER_PAGE)
                             startActivity(intent)
                         }
-                        is WelcomeUiAction.Skip -> {
+                        is WelcomeUiEvent.Skip -> {
                             val intent = Intent(context, MainActivity::class.java)
                             startActivity(intent)
                             activity?.finishAffinity()
@@ -65,7 +65,7 @@ class WelcomeFragment : BaseFragment() {
         }
     }
 
-    override fun setupUiAction() {
+    override fun setupUiEvent() {
         binding.btnLogin.setOnClickListener {
             viewModel.onLoginEvent()
         }

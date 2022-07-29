@@ -6,7 +6,7 @@ import com.adedom.domain.use_cases.login.LoginUseCase
 import com.adedom.domain.use_cases.validate.ValidateEmailUseCase
 import com.adedom.domain.use_cases.validate.ValidatePasswordUseCase
 import com.adedom.myfood.base.BaseViewModel
-import com.adedom.myfood.presentation.authentication.action.LoginUiAction
+import com.adedom.myfood.presentation.authentication.event.LoginUiEvent
 import com.adedom.myfood.presentation.authentication.state.LoginUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
@@ -16,7 +16,7 @@ class LoginViewModel(
     private val validateEmailUseCase: ValidateEmailUseCase,
     private val validatePasswordUseCase: ValidatePasswordUseCase,
     private val loginUseCase: LoginUseCase,
-) : BaseViewModel<LoginUiState, LoginUiAction>(LoginUiState.Initial) {
+) : BaseViewModel<LoginUiState, LoginUiEvent>(LoginUiState.Initial) {
 
     private val _form = MutableStateFlow(LoginUiState.LoginForm())
 
@@ -68,8 +68,8 @@ class LoginViewModel(
             val resource = loginUseCase(email, password)
             when (resource) {
                 is Resource.Success -> {
-                    val event = LoginUiAction.LoginSuccess
-                    _uiAction.emit(event)
+                    val event = LoginUiEvent.LoginSuccess
+                    _uiEvent.emit(event)
                 }
                 is Resource.Error -> {
                     _uiState.update {
@@ -89,8 +89,8 @@ class LoginViewModel(
 
     fun onRegisterEvent() {
         viewModelScope.launch {
-            val event = LoginUiAction.Register
-            _uiAction.emit(event)
+            val event = LoginUiEvent.Register
+            _uiEvent.emit(event)
         }
     }
 }
