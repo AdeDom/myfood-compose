@@ -12,6 +12,7 @@ import com.adedom.myfood.base.BaseFragment
 import com.adedom.myfood.databinding.FragmentWelcomeBinding
 import com.adedom.myfood.presentation.authentication.view.AuthenticationActivity
 import com.adedom.myfood.presentation.main.view.MainActivity
+import com.adedom.myfood.presentation.welcome.action.WelcomeUiAction
 import com.adedom.myfood.presentation.welcome.view_model.WelcomeViewModel
 import com.adedom.myfood.utils.constant.AppConstant
 import kotlinx.coroutines.launch
@@ -41,10 +42,24 @@ class WelcomeFragment : BaseFragment() {
     override fun setupUiState() {
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.skipChannel.collect {
-                    val intent = Intent(context, MainActivity::class.java)
-                    startActivity(intent)
-                    activity?.finishAffinity()
+                viewModel.uiAction.collect { uiAction ->
+                    when (uiAction) {
+                        WelcomeUiAction.Login -> {
+                            val intent = Intent(context, AuthenticationActivity::class.java)
+                            intent.putExtra(AppConstant.PAGE, AppConstant.LOGIN_PAGE)
+                            startActivity(intent)
+                        }
+                        WelcomeUiAction.Register -> {
+                            val intent = Intent(context, AuthenticationActivity::class.java)
+                            intent.putExtra(AppConstant.PAGE, AppConstant.REGISTER_PAGE)
+                            startActivity(intent)
+                        }
+                        is WelcomeUiAction.Skip -> {
+                            val intent = Intent(context, MainActivity::class.java)
+                            startActivity(intent)
+                            activity?.finishAffinity()
+                        }
+                    }
                 }
             }
         }
@@ -52,19 +67,15 @@ class WelcomeFragment : BaseFragment() {
 
     override fun setupUiAction() {
         binding.btnLogin.setOnClickListener {
-            val intent = Intent(context, AuthenticationActivity::class.java)
-            intent.putExtra(AppConstant.PAGE, AppConstant.LOGIN_PAGE)
-            startActivity(intent)
+            viewModel.onLoginEvent()
         }
 
         binding.btnRegister.setOnClickListener {
-            val intent = Intent(context, AuthenticationActivity::class.java)
-            intent.putExtra(AppConstant.PAGE, AppConstant.REGISTER_PAGE)
-            startActivity(intent)
+            viewModel.onRegisterEvent()
         }
 
         binding.tvSkip.setOnClickListener {
-            viewModel.skipAction()
+            viewModel.onSkipEvent()
         }
     }
 }
