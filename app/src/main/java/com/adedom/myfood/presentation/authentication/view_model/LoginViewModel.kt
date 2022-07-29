@@ -32,22 +32,22 @@ class LoginViewModel(
         }
     }
 
-    fun onEmailEventToState() {
+    fun onValidateEmail() {
         _uiState.update {
             val isValidateEmail = validateEmailUseCase(_form.value.email)
             val isValidatePassword = validatePasswordUseCase(_form.value.password)
-            LoginUiState.Email(
+            LoginUiState.ValidateEmail(
                 isError = !isValidateEmail,
                 isLogin = isValidateEmail && isValidatePassword,
             )
         }
     }
 
-    fun onPasswordEventToState() {
+    fun onValidatePassword() {
         _uiState.update {
             val isValidateEmail = validateEmailUseCase(_form.value.email)
             val isValidatePassword = validatePasswordUseCase(_form.value.password)
-            LoginUiState.Password(
+            LoginUiState.ValidatePassword(
                 isError = !isValidatePassword,
                 isLogin = isValidateEmail && isValidatePassword,
             )

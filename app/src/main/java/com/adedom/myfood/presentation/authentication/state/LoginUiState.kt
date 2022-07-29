@@ -5,12 +5,12 @@ import com.adedom.data.models.error.BaseError
 sealed interface LoginUiState {
     object Initial : LoginUiState
 
-    data class Email(
+    data class ValidateEmail(
         val isError: Boolean,
         val isLogin: Boolean,
     ) : LoginUiState
 
-    data class Password(
+    data class ValidatePassword(
         val isError: Boolean,
         val isLogin: Boolean,
     ) : LoginUiState

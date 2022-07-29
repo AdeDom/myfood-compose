@@ -51,7 +51,7 @@ class LoginFragment : BaseFragment() {
                             binding.btnLogin.setBackgroundResource(R.drawable.shape_overlay_button_grey)
                             binding.btnLogin.isClickable = false
                         }
-                        is LoginUiState.Email -> {
+                        is LoginUiState.ValidateEmail -> {
                             binding.tvErrorEmail.isVisible = uiState.isError
                             binding.btnLogin.isClickable = uiState.isLogin
                             if (uiState.isLogin) {
@@ -60,7 +60,7 @@ class LoginFragment : BaseFragment() {
                                 binding.btnLogin.setBackgroundResource(R.drawable.shape_overlay_button_grey)
                             }
                         }
-                        is LoginUiState.Password -> {
+                        is LoginUiState.ValidatePassword -> {
                             binding.tvErrorPassword.isVisible = uiState.isError
                             binding.btnLogin.isClickable = uiState.isLogin
                             if (uiState.isLogin) {
@@ -109,12 +109,12 @@ class LoginFragment : BaseFragment() {
     override fun setupUiAction() {
         binding.edtEmail.addTextChangedListener { email ->
             viewModel.setEmail(email.toString())
-            viewModel.onEmailEventToState()
+            viewModel.onValidateEmail()
         }
 
         binding.edtPassword.addTextChangedListener { password ->
             viewModel.setPassword(password.toString())
-            viewModel.onPasswordEventToState()
+            viewModel.onValidatePassword()
         }
 
         binding.btnLogin.setOnClickListener {
