@@ -24,7 +24,7 @@ import org.kodein.di.instance
 
 val dataModule = DI.Module(name = "data") {
 
-    bindSingleton { ApiServiceInterceptor() }
+    bindSingleton { ApiServiceInterceptor(instance()) }
     bindSingleton { DataSourceProvider(instance(), instance()) }
 
     bindSingleton<AuthRemoteDataSource> { AuthRemoteDataSourceImpl(instance()) }

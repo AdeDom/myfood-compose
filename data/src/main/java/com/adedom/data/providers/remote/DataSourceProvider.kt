@@ -13,7 +13,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 
 class DataSourceProvider(
-    private val dataStore: AppDataStore,
+    private val appDataStore: AppDataStore,
     private val apiServiceInterceptor: ApiServiceInterceptor,
 ) {
 
@@ -24,7 +24,7 @@ class DataSourceProvider(
                 if (dataSourceType == DataSourceType.AUTHORIZATION) {
                     addInterceptor { chain ->
                         val accessToken = runBlocking(Dispatchers.IO) {
-                            dataStore.getAccessToken().orEmpty()
+                            appDataStore.getAccessToken().orEmpty()
                         }
                         val request = chain.request()
                             .newBuilder()
