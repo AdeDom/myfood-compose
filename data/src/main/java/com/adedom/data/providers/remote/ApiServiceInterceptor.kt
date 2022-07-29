@@ -112,19 +112,6 @@ class ApiServiceInterceptor(
 
     private fun getHttpClient(): HttpClient {
         return HttpClient(OkHttp) {
-            engine {
-                addInterceptor { chain ->
-                    val accessToken = runBlocking(Dispatchers.IO) {
-                        appDataStore.getAccessToken().orEmpty()
-                    }
-                    val request = chain.request()
-                        .newBuilder()
-                        .addHeader(HttpHeaders.Authorization, "Bearer $accessToken")
-                        .build()
-                    chain.proceed(request)
-                }
-            }
-
             install(JsonFeature) {
                 serializer = KotlinxSerializer(kotlinx.serialization.json.Json {
                     ignoreUnknownKeys = true
