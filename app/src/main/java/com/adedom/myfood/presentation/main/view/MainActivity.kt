@@ -1,13 +1,16 @@
 package com.adedom.myfood.presentation.main.view
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.adedom.myfood.base.BaseActivity
 import com.adedom.myfood.databinding.ActivityMainBinding
+import com.adedom.myfood.presentation.main.event.MainUiEvent
 import com.adedom.myfood.presentation.main.state.MainUiState
 import com.adedom.myfood.presentation.main.view_model.MainViewModel
+import com.adedom.myfood.presentation.welcome.view.WelcomeActivity
 import kotlinx.coroutines.launch
 import org.kodein.di.instance
 
@@ -34,6 +37,25 @@ class MainActivity : BaseActivity() {
             }
         }
 
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uiEvent.collect { uiEvent ->
+                    when (uiEvent) {
+                        MainUiEvent.Logout -> {
+                            val intent = Intent(baseContext, WelcomeActivity::class.java)
+                            startActivity(intent)
+                            finishAffinity()
+                        }
+                    }
+                }
+            }
+        }
+
         viewModel.callApiService()
+
+        binding.btLogout.setOnClickListener {
+            viewModel.callLogout()
+            viewModel.onLogoutEvent()
+        }
     }
 }

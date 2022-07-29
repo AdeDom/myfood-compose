@@ -1,6 +1,7 @@
 package com.adedom.domain.di
 
 import com.adedom.domain.use_cases.login.LoginUseCase
+import com.adedom.domain.use_cases.logout.LogoutUseCase
 import com.adedom.domain.use_cases.main.MainPageUseCase
 import com.adedom.domain.use_cases.splash_screen.GetIsAuthUseCase
 import com.adedom.domain.use_cases.validate.ValidateEmailUseCase
@@ -16,6 +17,7 @@ val domainModule = DI.Module(name = "domain") {
     bindProvider { ValidateEmailUseCase() }
     bindProvider { ValidatePasswordUseCase() }
     bindProvider { LoginUseCase(instance()) }
+    bindProvider { LogoutUseCase(instance()) }
     bindProvider { WelcomeGuestRoleUseCase(instance()) }
     bindProvider { MainPageUseCase(instance()) }
 }

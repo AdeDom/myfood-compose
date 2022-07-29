@@ -11,7 +11,7 @@ import org.kodein.di.instance
 
 val presentationModule = DI.Module(name = "presentation") {
 
-    bindProvider { MainViewModel(instance()) }
+    bindProvider { MainViewModel(instance(), instance()) }
     bindProvider { SplashScreenViewModel(instance()) }
     bindProvider { WelcomeViewModel(instance()) }
     bindProvider { LoginViewModel(instance(), instance(), instance()) }

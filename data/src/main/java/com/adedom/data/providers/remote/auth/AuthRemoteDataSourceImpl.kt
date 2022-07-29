@@ -30,4 +30,9 @@ class AuthRemoteDataSourceImpl(
                 )
             }
     }
+
+    override suspend fun callLogout(): BaseResponse<String> {
+        return dataSourceProvider.getHttpClient(DataSourceType.AUTHORIZATION)
+            .post(BuildConfig.BASE_URL + "api/auth/logout")
+    }
 }
