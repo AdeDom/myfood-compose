@@ -9,7 +9,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.adedom.myfood.base.BaseFragment
 import com.adedom.myfood.databinding.FragmentRegisterBinding
-import com.adedom.myfood.presentation.authentication.state.RegisterUiState
+import com.adedom.myfood.presentation.authentication.action.RegisterUiEvent
 import com.adedom.myfood.presentation.authentication.view_model.RegisterViewModel
 import kotlinx.coroutines.launch
 import org.kodein.di.instance
@@ -38,11 +38,9 @@ class RegisterFragment : BaseFragment() {
     override fun setupUiState() {
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.uiState.collect { uiState ->
-                    when (uiState) {
-                        RegisterUiState.Initial -> {
-                        }
-                        RegisterUiState.Login -> {
+                viewModel.uiAction.collect { uiAction ->
+                    when (uiAction) {
+                        RegisterUiEvent.Login -> {
                             val authenticationActivity = activity as? AuthenticationActivity
                             authenticationActivity?.openLoginPage()
                         }
@@ -54,7 +52,7 @@ class RegisterFragment : BaseFragment() {
 
     override fun setupUiAction() {
         binding.tvLogin.setOnClickListener {
-            viewModel.loginAction()
+            viewModel.onLoginEvent()
         }
     }
 }
