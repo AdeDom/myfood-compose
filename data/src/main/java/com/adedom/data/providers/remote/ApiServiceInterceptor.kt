@@ -2,9 +2,9 @@ package com.adedom.data.providers.remote
 
 import com.adedom.data.models.error.BaseError
 import com.adedom.data.utils.ApiServiceException
+import io.ktor.http.*
 import okhttp3.Interceptor
 import okhttp3.Response
-import org.json.JSONException
 import org.json.JSONObject
 
 class ApiServiceInterceptor : Interceptor {
@@ -14,24 +14,31 @@ class ApiServiceInterceptor : Interceptor {
         val response = chain.proceed(request)
 
         if (response.isSuccessful) {
-            val jsonString = response.peekBody(Long.MAX_VALUE).string()
-            val baseResponse = jsonString.decodeApiServiceResponseFromString()
-            val status = baseResponse.status
-            return if (status == "success") {
-                response
-            } else {
-                val baseError = baseResponse.error ?: createBaseError()
-                throw ApiServiceException(baseError)
-            }
+            return response
         } else {
-            try {
-                val jsonString = JSONObject(response.body?.string().orEmpty()).toString()
-                val baseResponse = jsonString.decodeApiServiceResponseFromString()
-                val baseError = baseResponse.error ?: createBaseError()
-                throw ApiServiceException(baseError)
-            } catch (e: JSONException) {
-                val baseError = createBaseError(e.message)
-                throw ApiServiceException(baseError)
+            when (response.code) {
+                HttpStatusCode.BadRequest.value -> {
+                    val jsonString = JSONObject(response.body?.string().orEmpty()).toString()
+                    val baseResponse = jsonString.decodeApiServiceResponseFromString()
+                    val baseError = baseResponse.error ?: createBaseError()
+                    throw ApiServiceException(baseError)
+                }
+                HttpStatusCode.Unauthorized.value -> {
+                    val error = createBaseError()
+                    throw ApiServiceException(error)
+                }
+                HttpStatusCode.Forbidden.value -> {
+                    val error = createBaseError()
+                    throw ApiServiceException(error)
+                }
+                in 500..599 -> {
+                    val baseError = createBaseError(response.message)
+                    throw ApiServiceException(baseError)
+                }
+                else -> {
+                    val baseError = createBaseError(response.message)
+                    throw ApiServiceException(baseError)
+                }
             }
         }
     }
