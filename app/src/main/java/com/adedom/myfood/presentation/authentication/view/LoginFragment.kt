@@ -108,11 +108,13 @@ class LoginFragment : BaseFragment() {
 
     override fun setupUiAction() {
         binding.edtEmail.addTextChangedListener { email ->
-            viewModel.onEmailEventToState(email.toString())
+            viewModel.setEmail(email.toString())
+            viewModel.onEmailEventToState()
         }
 
         binding.edtPassword.addTextChangedListener { password ->
-            viewModel.onPasswordEventToState(password.toString())
+            viewModel.setPassword(password.toString())
+            viewModel.onPasswordEventToState()
         }
 
         binding.btnLogin.setOnClickListener {

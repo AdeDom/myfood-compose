@@ -20,16 +20,22 @@ class LoginViewModel(
 
     private val _form = MutableStateFlow(LoginUiState.LoginForm())
 
-    fun onEmailEventToState(email: String) {
+    fun setEmail(email: String) {
         _form.update {
-            it.copy(
-                email = email,
-                password = it.password,
-            )
+            it.copy(email = email)
         }
-        val isValidateEmail = validateEmailUseCase(_form.value.email)
-        val isValidatePassword = validatePasswordUseCase(_form.value.password)
+    }
+
+    fun setPassword(password: String) {
+        _form.update {
+            it.copy(password = password)
+        }
+    }
+
+    fun onEmailEventToState() {
         _uiState.update {
+            val isValidateEmail = validateEmailUseCase(_form.value.email)
+            val isValidatePassword = validatePasswordUseCase(_form.value.password)
             LoginUiState.Email(
                 isError = !isValidateEmail,
                 isLogin = isValidateEmail && isValidatePassword,
@@ -37,16 +43,10 @@ class LoginViewModel(
         }
     }
 
-    fun onPasswordEventToState(password: String) {
-        _form.update {
-            it.copy(
-                email = it.email,
-                password = password,
-            )
-        }
-        val isValidateEmail = validateEmailUseCase(_form.value.email)
-        val isValidatePassword = validatePasswordUseCase(_form.value.password)
+    fun onPasswordEventToState() {
         _uiState.update {
+            val isValidateEmail = validateEmailUseCase(_form.value.email)
+            val isValidatePassword = validatePasswordUseCase(_form.value.password)
             LoginUiState.Password(
                 isError = !isValidatePassword,
                 isLogin = isValidateEmail && isValidatePassword,
