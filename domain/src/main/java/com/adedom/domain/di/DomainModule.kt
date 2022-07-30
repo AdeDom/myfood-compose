@@ -16,7 +16,7 @@ val domainModule = DI.Module(name = "domain") {
     bindProvider { GetIsAuthUseCase(instance()) }
     bindProvider { ValidateEmailUseCase() }
     bindProvider { ValidatePasswordUseCase() }
-    bindProvider { LoginUseCase(instance()) }
+    bindProvider { LoginUseCase(instance(), instance()) }
     bindProvider { LogoutUseCase(instance()) }
     bindProvider { WelcomeGuestRoleUseCase(instance()) }
     bindProvider { MainPageUseCase(instance()) }
