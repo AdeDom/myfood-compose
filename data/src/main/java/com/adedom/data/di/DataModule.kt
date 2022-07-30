@@ -1,5 +1,7 @@
 package com.adedom.data.di
 
+import com.adedom.data.providers.local.UserProfileLocalDataSource
+import com.adedom.data.providers.local.UserProfileLocalDataSourceImpl
 import com.adedom.data.providers.remote.ApiServiceInterceptor
 import com.adedom.data.providers.remote.DataSourceProvider
 import com.adedom.data.providers.remote.auth.AuthRemoteDataSource
@@ -22,6 +24,7 @@ import com.adedom.data.repositories.splash_screen.SplashScreenRepository
 import com.adedom.data.repositories.splash_screen.SplashScreenRepositoryImpl
 import com.adedom.data.repositories.welcome.WelcomeRepository
 import com.adedom.data.repositories.welcome.WelcomeRepositoryImpl
+import com.adedom.myfood.MyFoodDatabase
 import org.kodein.di.DI
 import org.kodein.di.bindSingleton
 import org.kodein.di.instance
@@ -30,6 +33,9 @@ val dataModule = DI.Module(name = "data") {
 
     bindSingleton { ApiServiceInterceptor(instance()) }
     bindSingleton { DataSourceProvider(instance(), instance()) }
+    bindSingleton { MyFoodDatabase(instance()) }
+
+    bindSingleton<UserProfileLocalDataSource> { UserProfileLocalDataSourceImpl(instance()) }
 
     bindSingleton<AuthRemoteDataSource> { AuthRemoteDataSourceImpl(instance()) }
     bindSingleton<ProfileRemoteDataSource> { ProfileRemoteDataSourceImpl(instance()) }
@@ -39,7 +45,7 @@ val dataModule = DI.Module(name = "data") {
     bindSingleton<SplashScreenRepository> { SplashScreenRepositoryImpl(instance()) }
     bindSingleton<AuthLoginRepository> { AuthLoginRepositoryImpl(instance(), instance()) }
     bindSingleton<AuthLogoutRepository> { AuthLogoutRepositoryImpl(instance(), instance()) }
-    bindSingleton<UserProfileRepository> { UserProfileRepositoryImpl(instance()) }
+    bindSingleton<UserProfileRepository> { UserProfileRepositoryImpl(instance(), instance()) }
     bindSingleton<WelcomeRepository> { WelcomeRepositoryImpl(instance()) }
     bindSingleton<HomeRepository> { HomeRepositoryImpl(instance(), instance()) }
 }

@@ -2,6 +2,13 @@ plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
     id 'kotlinx-serialization'
+    id 'com.squareup.sqldelight'
+}
+
+sqldelight {
+    MyFoodDatabase {
+        packageName = "com.adedom.myfood"
+    }
 }
 
 android {
@@ -57,4 +64,6 @@ dependencies {
     implementation "io.ktor:ktor-client-okhttp:$ktor_version"
     implementation "io.ktor:ktor-client-logging-jvm:$ktor_version"
     implementation "io.ktor:ktor-client-serialization:$ktor_version"
+
+    implementation "com.squareup.sqldelight:coroutines-extensions:$sqldelight_version"
 }

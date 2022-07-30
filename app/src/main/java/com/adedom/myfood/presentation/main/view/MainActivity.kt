@@ -32,6 +32,14 @@ class MainActivity : BaseActivity() {
                     when (uiState) {
                         is MainUiState.Initial -> {
                         }
+                        is MainUiState.ShowUserProfile -> {
+                            binding.tvUserId.text = uiState.userProfile.userId
+                            binding.tvEmail.text = uiState.userProfile.email
+                            binding.tvName.text = uiState.userProfile.name
+                            binding.tvMobileNo.text = uiState.userProfile.mobileNo
+                            binding.tvAddress.text = uiState.userProfile.address
+                            binding.tvImage.text = uiState.userProfile.image
+                        }
                     }
                 }
             }

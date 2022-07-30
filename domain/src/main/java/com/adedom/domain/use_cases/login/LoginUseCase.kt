@@ -3,10 +3,12 @@ package com.adedom.domain.use_cases.login
 import com.adedom.data.models.error.AppErrorCode
 import com.adedom.data.models.error.BaseError
 import com.adedom.data.models.request.login.LoginRequest
+import com.adedom.data.models.response.user_profile.UserProfileResponse
 import com.adedom.data.repositories.auth.AuthLoginRepository
 import com.adedom.data.repositories.profile.UserProfileRepository
 import com.adedom.data.utils.ApiServiceException
 import com.adedom.data.utils.Resource
+import myfood.database.UserProfileEntity
 
 class LoginUseCase(
     private val authLoginRepository: AuthLoginRepository,
@@ -23,7 +25,9 @@ class LoginUseCase(
                 authLoginRepository.saveToken(accessToken, refreshToken)
                 authLoginRepository.saveAuthRole()
 
-                userProfileRepository.callUserProfile()
+                val userProfile = userProfileRepository.callUserProfile()
+                val userProfileEntity = mapUserProfileToUserProfileEntity(userProfile)
+                userProfileRepository.saveUserProfile(userProfileEntity)
                 Resource.Success(Unit)
             } else {
                 val code = AppErrorCode.TokenIsNull.code
@@ -34,5 +38,19 @@ class LoginUseCase(
             val baseError = exception.toBaseError()
             Resource.Error(baseError)
         }
+    }
+
+    private fun mapUserProfileToUserProfileEntity(userProfile: UserProfileResponse?): UserProfileEntity {
+        return UserProfileEntity(
+            userProfile?.userId.orEmpty(),
+            userProfile?.email.orEmpty(),
+            userProfile?.name.orEmpty(),
+            userProfile?.mobileNo,
+            userProfile?.address,
+            userProfile?.image,
+            userProfile?.status.orEmpty(),
+            userProfile?.created.orEmpty(),
+            userProfile?.updated,
+        )
     }
 }

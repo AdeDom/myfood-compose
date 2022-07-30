@@ -1,0 +1,24 @@
+CREATE TABLE UserProfileEntity (
+    userId TEXT NOT NULL PRIMARY KEY,
+    email TEXT NOT NULL,
+    name TEXT NOT NULL,
+    mobileNo TEXT,
+    address TEXT,
+    image TEXT,
+    status TEXT NOT NULL,
+    created TEXT NOT NULL,
+    updated TEXT
+);
+
+getUserProfile:
+SELECT *
+FROM UserProfileEntity
+LIMIT 1;
+
+saveUserProfile:
+INSERT OR REPLACE
+INTO UserProfileEntity
+VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+deleteUserProfile:
+DELETE FROM UserProfileEntity;

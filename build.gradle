@@ -5,9 +5,11 @@ buildscript {
         kodein_version = '7.11.0'
         coroutine_version = '1.6.4'
         ktor_version = '1.6.8'
+        sqldelight_version = '1.5.3'
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlin_version"
+        classpath "com.squareup.sqldelight:gradle-plugin:$sqldelight_version"
     }
 }
 

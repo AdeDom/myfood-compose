@@ -3,16 +3,33 @@ package com.adedom.myfood.presentation.main.view_model
 import androidx.lifecycle.viewModelScope
 import com.adedom.domain.use_cases.logout.LogoutUseCase
 import com.adedom.domain.use_cases.main.MainPageUseCase
+import com.adedom.domain.use_cases.user_profile.GetUserProfileUseCase
 import com.adedom.myfood.base.BaseViewModel
 import com.adedom.myfood.presentation.main.event.MainUiEvent
 import com.adedom.myfood.presentation.main.state.MainUiState
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class MainViewModel(
+    private val getUserProfileUseCase: GetUserProfileUseCase,
     private val mainPageUseCase: MainPageUseCase,
     private val logoutUseCase: LogoutUseCase,
 ) : BaseViewModel<MainUiState, MainUiEvent>(MainUiState.Initial) {
+
+    init {
+        getUserProfile()
+    }
+
+    private fun getUserProfile() {
+        viewModelScope.launch {
+            getUserProfileUseCase().collect { userProfile ->
+                _uiState.update {
+                    MainUiState.ShowUserProfile(userProfile)
+                }
+            }
+        }
+    }
 
     fun callApiService() {
         viewModelScope.launch {
