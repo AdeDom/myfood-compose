@@ -16,11 +16,6 @@ class AuthRemoteDataSourceImpl(
     private val dataSourceProvider: DataSourceProvider,
 ) : AuthRemoteDataSource {
 
-    override suspend fun callTestAuth(): BaseResponse<String> {
-        return dataSourceProvider.getHttpClient(DataSourceType.AUTHORIZATION)
-            .get(BuildConfig.BASE_URL + "api/auth")
-    }
-
     override suspend fun callLogin(loginRequest: LoginRequest): BaseResponse<TokenResponse> {
         return dataSourceProvider.getHttpClient(DataSourceType.UN_AUTHORIZATION)
             .post(BuildConfig.BASE_URL + "api/auth/login") {
