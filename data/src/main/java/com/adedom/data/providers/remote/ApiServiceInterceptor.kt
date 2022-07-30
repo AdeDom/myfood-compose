@@ -9,17 +9,16 @@ import com.adedom.data.providers.data_store.AppDataStore
 import com.adedom.data.utils.ApiServiceException
 import com.adedom.data.utils.AuthRole
 import io.ktor.client.*
+import io.ktor.client.call.*
 import io.ktor.client.engine.okhttp.*
-import io.ktor.client.features.*
-import io.ktor.client.features.json.*
-import io.ktor.client.features.json.serializer.*
-import io.ktor.client.features.logging.*
+import io.ktor.client.plugins.*
+import io.ktor.client.plugins.contentnegotiation.*
+import io.ktor.client.plugins.logging.*
 import io.ktor.client.request.*
-import io.ktor.content.*
 import io.ktor.http.*
+import io.ktor.serialization.kotlinx.json.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import okhttp3.Interceptor
 import okhttp3.Response
@@ -90,11 +89,10 @@ class ApiServiceInterceptor(
                 )
                 val tokenResponse: BaseResponse<TokenResponse> = getHttpClient()
                     .post("${BuildConfig.BASE_URL}api/auth/refreshToken") {
-                        body = TextContent(
-                            text = Json.encodeToString(tokenRequest),
-                            contentType = ContentType.Application.Json
-                        )
+                        contentType(ContentType.Application.Json)
+                        setBody(tokenRequest)
                     }
+                    .body()
 
                 val accessToken = tokenResponse.result?.accessToken.orEmpty()
                 val refreshToken = tokenResponse.result?.refreshToken.orEmpty()
@@ -119,8 +117,8 @@ class ApiServiceInterceptor(
 
     private fun getHttpClient(): HttpClient {
         return HttpClient(OkHttp) {
-            install(JsonFeature) {
-                serializer = KotlinxSerializer(kotlinx.serialization.json.Json {
+            install(ContentNegotiation) {
+                json(Json {
                     ignoreUnknownKeys = true
                 })
             }

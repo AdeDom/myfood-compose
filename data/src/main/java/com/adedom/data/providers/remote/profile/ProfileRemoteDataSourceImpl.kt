@@ -5,6 +5,7 @@ import com.adedom.data.models.response.BaseResponse
 import com.adedom.data.models.response.user_profile.UserProfileResponse
 import com.adedom.data.providers.remote.DataSourceProvider
 import com.adedom.data.providers.remote.DataSourceType
+import io.ktor.client.call.*
 import io.ktor.client.request.*
 
 class ProfileRemoteDataSourceImpl(
@@ -14,5 +15,6 @@ class ProfileRemoteDataSourceImpl(
     override suspend fun callUserProfile(): BaseResponse<UserProfileResponse> {
         return dataSourceProvider.getHttpClient(DataSourceType.AUTHORIZATION)
             .get(BuildConfig.BASE_URL + "api/profile/user")
+            .body()
     }
 }

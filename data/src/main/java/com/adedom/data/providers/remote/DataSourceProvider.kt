@@ -4,13 +4,14 @@ import com.adedom.data.BuildConfig
 import com.adedom.data.providers.data_store.AppDataStore
 import io.ktor.client.*
 import io.ktor.client.engine.okhttp.*
-import io.ktor.client.features.*
-import io.ktor.client.features.json.*
-import io.ktor.client.features.json.serializer.*
-import io.ktor.client.features.logging.*
+import io.ktor.client.plugins.*
+import io.ktor.client.plugins.contentnegotiation.*
+import io.ktor.client.plugins.logging.*
 import io.ktor.http.*
+import io.ktor.serialization.kotlinx.json.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
+import kotlinx.serialization.json.Json
 
 class DataSourceProvider(
     private val appDataStore: AppDataStore,
@@ -35,8 +36,8 @@ class DataSourceProvider(
                 }
             }
 
-            install(JsonFeature) {
-                serializer = KotlinxSerializer(kotlinx.serialization.json.Json {
+            install(ContentNegotiation) {
+                json(Json {
                     ignoreUnknownKeys = true
                 })
             }
