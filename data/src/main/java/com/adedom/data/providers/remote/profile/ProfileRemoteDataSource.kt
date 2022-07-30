@@ -1,7 +1,7 @@
 package com.adedom.data.providers.remote.profile
 
-import com.adedom.data.models.response.BaseResponse
-import com.adedom.data.models.response.user_profile.UserProfileResponse
+import com.adedom.myfood.data.models.base.BaseResponse
+import com.adedom.myfood.data.models.response.UserProfileResponse
 
 interface ProfileRemoteDataSource {
 

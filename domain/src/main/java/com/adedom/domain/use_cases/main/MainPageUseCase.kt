@@ -1,11 +1,11 @@
 package com.adedom.domain.use_cases.main
 
-import com.adedom.data.models.response.category.Category
-import com.adedom.data.models.response.food.Food
 import com.adedom.data.repositories.home.HomeRepository
 import com.adedom.domain.models.category.CategoryModel
 import com.adedom.domain.models.food.FoodModel
 import com.adedom.domain.models.main.MainPageModel
+import com.adedom.myfood.data.models.response.CategoryResponse
+import com.adedom.myfood.data.models.response.FoodDetailResponse
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
@@ -24,7 +24,7 @@ class MainPageUseCase(
                 .map { category ->
                     async {
                         homeRepository.callFoodListByCategoryId(
-                            categoryId = category.categoryId ?: CATEGORY_RECOMMEND
+                            categoryId = category.categoryId
                         )
                     }
                 }
@@ -42,15 +42,15 @@ class MainPageUseCase(
         }
     }
 
-    private fun mapCategoryToCategoryModel(category: Category): CategoryModel {
+    private fun mapCategoryToCategoryModel(category: CategoryResponse): CategoryModel {
         return CategoryModel(
-            categoryId = category.categoryId ?: 0,
-            categoryName = category.categoryName.orEmpty(),
-            image = category.image.orEmpty(),
+            categoryId = category.categoryId,
+            categoryName = category.categoryName,
+            image = category.image,
         )
     }
 
-    private fun mapFoodToFoodModel(food: Food): FoodModel {
+    private fun mapFoodToFoodModel(food: FoodDetailResponse): FoodModel {
         return FoodModel(
             foodId = food.foodId,
             foodName = food.foodName,

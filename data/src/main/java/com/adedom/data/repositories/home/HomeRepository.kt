@@ -1,11 +1,11 @@
 package com.adedom.data.repositories.home
 
-import com.adedom.data.models.response.category.Category
-import com.adedom.data.models.response.food.Food
+import com.adedom.myfood.data.models.response.CategoryResponse
+import com.adedom.myfood.data.models.response.FoodDetailResponse
 
 interface HomeRepository {
 
-    suspend fun callCategoryAll(): List<Category>
+    suspend fun callCategoryAll(): List<CategoryResponse>
 
-    suspend fun callFoodListByCategoryId(categoryId: Int): List<Food>
+    suspend fun callFoodListByCategoryId(categoryId: Int): List<FoodDetailResponse>
 }

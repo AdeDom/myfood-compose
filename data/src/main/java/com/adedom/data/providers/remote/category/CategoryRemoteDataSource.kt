@@ -1,8 +1,9 @@
 package com.adedom.data.providers.remote.category
 
-import com.adedom.data.models.response.category.CategoryResponse
+import com.adedom.myfood.data.models.base.BaseResponse
+import com.adedom.myfood.data.models.response.CategoryResponse
 
 interface CategoryRemoteDataSource {
 
-    suspend fun callCategoryAll(): CategoryResponse
+    suspend fun callCategoryAll(): BaseResponse<List<CategoryResponse>>
 }

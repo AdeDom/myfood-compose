@@ -1,6 +1,6 @@
 package com.adedom.myfood.presentation.authentication.state
 
-import com.adedom.data.models.error.BaseError
+import com.adedom.myfood.data.models.base.BaseError
 
 sealed interface LoginUiState {
     object Initial : LoginUiState

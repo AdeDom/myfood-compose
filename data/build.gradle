@@ -68,4 +68,6 @@ dependencies {
     implementation "io.ktor:ktor-serialization-kotlinx-json:$ktor_version"
 
     implementation "com.squareup.sqldelight:coroutines-extensions:$sqldelight_version"
+
+    implementation "com.github.AdeDom:myfood-server:$myfood_version"
 }

@@ -1,8 +1,8 @@
 package com.adedom.data.repositories.profile
 
-import com.adedom.data.models.response.user_profile.UserProfileResponse
 import com.adedom.data.providers.local.UserProfileLocalDataSource
 import com.adedom.data.providers.remote.profile.ProfileRemoteDataSource
+import com.adedom.myfood.data.models.response.UserProfileResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext

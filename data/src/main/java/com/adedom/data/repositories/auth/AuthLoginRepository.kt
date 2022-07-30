@@ -1,7 +1,7 @@
 package com.adedom.data.repositories.auth
 
-import com.adedom.data.models.request.login.LoginRequest
-import com.adedom.data.models.response.token.TokenResponse
+import com.adedom.myfood.data.models.request.LoginRequest
+import com.adedom.myfood.data.models.response.TokenResponse
 
 interface AuthLoginRepository {
     suspend fun callLogin(loginRequest: LoginRequest): TokenResponse?

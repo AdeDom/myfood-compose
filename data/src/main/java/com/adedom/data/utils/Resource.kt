@@ -1,6 +1,6 @@
 package com.adedom.data.utils
 
-import com.adedom.data.models.error.BaseError
+import com.adedom.myfood.data.models.base.BaseError
 
 sealed class Resource<out T : Any> {
     data class Success<out T : Any>(val data: T) : Resource<T>()

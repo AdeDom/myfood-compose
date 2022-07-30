@@ -1,13 +1,13 @@
 package com.adedom.data.providers.remote
 
 import com.adedom.data.BuildConfig
-import com.adedom.data.models.error.BaseError
-import com.adedom.data.models.request.token.TokenRequest
-import com.adedom.data.models.response.BaseResponse
-import com.adedom.data.models.response.token.TokenResponse
 import com.adedom.data.providers.data_store.AppDataStore
 import com.adedom.data.utils.ApiServiceException
 import com.adedom.data.utils.AuthRole
+import com.adedom.myfood.data.models.base.BaseError
+import com.adedom.myfood.data.models.base.BaseResponse
+import com.adedom.myfood.data.models.request.TokenRequest
+import com.adedom.myfood.data.models.response.TokenResponse
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.engine.okhttp.*

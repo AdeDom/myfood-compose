@@ -48,6 +48,9 @@ android {
     buildFeatures {
         viewBinding true
     }
+    packagingOptions {
+        resources.excludes.add("META-INF/*")
+    }
 }
 
 dependencies {
@@ -75,4 +78,6 @@ dependencies {
     implementation "androidx.datastore:datastore-preferences:1.0.0"
 
     implementation "com.squareup.sqldelight:android-driver:$sqldelight_version"
+
+    implementation "com.github.AdeDom:myfood-server:$myfood_version"
 }

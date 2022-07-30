@@ -53,4 +53,6 @@ dependencies {
     implementation "org.kodein.di:kodein-di:$kodein_version"
 
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutine_version"
+
+    implementation "com.github.AdeDom:myfood-server:$myfood_version"
 }
