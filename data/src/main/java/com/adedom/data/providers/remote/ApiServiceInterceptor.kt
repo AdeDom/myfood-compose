@@ -107,19 +107,12 @@ class ApiServiceInterceptor(
                     .build()
                 chain.proceed(request)
             } catch (exception: ClientRequestException) {
-                when (exception.response.status.value) {
-                    HttpStatusCode.Forbidden.value -> {
-                        appDataStore.setAccessToken("")
-                        appDataStore.setRefreshToken("")
-                        appDataStore.setAuthRole(AuthRole.UnAuth)
-                        val baseError = createBaseError(exception.message)
-                        throw ApiServiceException(baseError)
-                    }
-                    else -> {
-                        val baseError = createBaseError(exception.message)
-                        throw ApiServiceException(baseError)
-                    }
-                }
+                // Refresh token expired.
+                appDataStore.setAccessToken("")
+                appDataStore.setRefreshToken("")
+                appDataStore.setAuthRole(AuthRole.UnAuth)
+                val baseError = createBaseError(exception.message)
+                throw ApiServiceException(baseError)
             }
         }
     }
