@@ -20,7 +20,7 @@ class UserProfileRepositoryImpl(
         }
     }
 
-    override fun getUserProfile(): Flow<UserProfileEntity> {
+    override fun getUserProfile(): Flow<UserProfileEntity?> {
         return userProfileLocalDataSource.getUserProfile()
     }
 

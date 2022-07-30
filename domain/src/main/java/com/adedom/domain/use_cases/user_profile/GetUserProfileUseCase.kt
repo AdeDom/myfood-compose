@@ -13,12 +13,12 @@ class GetUserProfileUseCase(
         return userProfileRepository.getUserProfile()
             .map { userProfileEntity ->
                 UserProfileModel(
-                    userId = userProfileEntity.userId,
-                    email = userProfileEntity.email,
-                    name = userProfileEntity.name,
-                    mobileNo = userProfileEntity.mobileNo ?: "-",
-                    address = userProfileEntity.address ?: "-",
-                    image = userProfileEntity.image.orEmpty(),
+                    userId = userProfileEntity?.userId.orEmpty(),
+                    email = userProfileEntity?.email.orEmpty(),
+                    name = userProfileEntity?.name.orEmpty(),
+                    mobileNo = userProfileEntity?.mobileNo ?: "-",
+                    address = userProfileEntity?.address ?: "-",
+                    image = userProfileEntity?.image.orEmpty(),
                 )
             }
     }
