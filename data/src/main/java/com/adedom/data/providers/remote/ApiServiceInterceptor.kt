@@ -24,7 +24,6 @@ import kotlinx.serialization.json.Json
 import okhttp3.Interceptor
 import okhttp3.Response
 import org.json.JSONObject
-import java.io.IOException
 
 class ApiServiceInterceptor(
     private val appDataStore: AppDataStore,
@@ -44,19 +43,9 @@ class ApiServiceInterceptor(
                     val baseError = baseResponse.error ?: createBaseError()
                     throw ApiServiceException(baseError)
                 }
-                HttpStatusCode.Unauthorized.value -> {
-                    return runBlocking(Dispatchers.IO) {
-                        try {
-                            val jsonString = JSONObject(response.body?.string().orEmpty()).toString()
-                            callRefreshToken(chain, jsonString)
-                        } catch (exception: IOException) {
-                            appDataStore.setAccessToken("")
-                            appDataStore.setRefreshToken("")
-                            appDataStore.setAuthRole(AuthRole.UnAuth)
-                            val baseError = createBaseError(exception.message)
-                            throw ApiServiceException(baseError)
-                        }
-                    }
+                HttpStatusCode.Unauthorized.value -> return runBlocking(Dispatchers.IO) {
+                    val jsonString = JSONObject(response.body?.string().orEmpty()).toString()
+                    callRefreshToken(chain, jsonString)
                 }
                 HttpStatusCode.Forbidden.value -> runBlocking(Dispatchers.IO) {
                     appDataStore.setAccessToken("")
@@ -94,28 +83,44 @@ class ApiServiceInterceptor(
             val baseError = baseResponse.error ?: createBaseError()
             throw ApiServiceException(baseError)
         } else {
-            val tokenRequest = TokenRequest(
-                accessToken = appDataStore.getAccessToken(),
-                refreshToken = appDataStore.getRefreshToken(),
-            )
-            val tokenResponse: BaseResponse<TokenResponse> = getHttpClient()
-                .post("${BuildConfig.BASE_URL}/api/auth/refreshtoken") {
-                    body = TextContent(
-                        text = Json.encodeToString(tokenRequest),
-                        contentType = ContentType.Application.Json
-                    )
-                }
+            return try {
+                val tokenRequest = TokenRequest(
+                    accessToken = appDataStore.getAccessToken(),
+                    refreshToken = appDataStore.getRefreshToken(),
+                )
+                val tokenResponse: BaseResponse<TokenResponse> = getHttpClient()
+                    .post("${BuildConfig.BASE_URL}api/auth/refreshToken") {
+                        body = TextContent(
+                            text = Json.encodeToString(tokenRequest),
+                            contentType = ContentType.Application.Json
+                        )
+                    }
 
-            val accessToken = tokenResponse.result?.accessToken.orEmpty()
-            val refreshToken = tokenResponse.result?.refreshToken.orEmpty()
-            appDataStore.setAccessToken(accessToken)
-            appDataStore.setRefreshToken(refreshToken)
-            val request = chain.request()
-                .newBuilder()
-                .removeHeader(HttpHeaders.Authorization)
-                .addHeader(HttpHeaders.Authorization, "Bearer $accessToken")
-                .build()
-            return chain.proceed(request)
+                val accessToken = tokenResponse.result?.accessToken.orEmpty()
+                val refreshToken = tokenResponse.result?.refreshToken.orEmpty()
+                appDataStore.setAccessToken(accessToken)
+                appDataStore.setRefreshToken(refreshToken)
+                val request = chain.request()
+                    .newBuilder()
+                    .removeHeader(HttpHeaders.Authorization)
+                    .addHeader(HttpHeaders.Authorization, "Bearer $accessToken")
+                    .build()
+                chain.proceed(request)
+            } catch (exception: ClientRequestException) {
+                when (exception.response.status.value) {
+                    HttpStatusCode.Forbidden.value -> {
+                        appDataStore.setAccessToken("")
+                        appDataStore.setRefreshToken("")
+                        appDataStore.setAuthRole(AuthRole.UnAuth)
+                        val baseError = createBaseError(exception.message)
+                        throw ApiServiceException(baseError)
+                    }
+                    else -> {
+                        val baseError = createBaseError(exception.message)
+                        throw ApiServiceException(baseError)
+                    }
+                }
+            }
         }
     }
 
