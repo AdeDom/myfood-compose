@@ -3,6 +3,7 @@ package com.adedom.data.providers.remote
 import com.adedom.data.BuildConfig
 import com.adedom.data.providers.data_store.AppDataStore
 import com.adedom.data.utils.ApiServiceException
+import com.adedom.data.utils.AuthRole
 import com.adedom.myfood.data.models.base.BaseError
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
@@ -50,6 +51,15 @@ class DataSourceProvider(
                 val exceptionResponse = clientException.response
                 when (exceptionResponse.status) {
                     HttpStatusCode.BadRequest -> {
+                        val jsonString = exceptionResponse.bodyAsText()
+                        val baseResponse = jsonString.decodeApiServiceResponseFromString()
+                        val baseError = baseResponse.error ?: createBaseError()
+                        throw ApiServiceException(baseError)
+                    }
+                    HttpStatusCode.Forbidden -> {
+                        appDataStore.setAccessToken("")
+                        appDataStore.setRefreshToken("")
+                        appDataStore.setAuthRole(AuthRole.UnAuth)
                         val jsonString = exceptionResponse.bodyAsText()
                         val baseResponse = jsonString.decodeApiServiceResponseFromString()
                         val baseError = baseResponse.error ?: createBaseError()
