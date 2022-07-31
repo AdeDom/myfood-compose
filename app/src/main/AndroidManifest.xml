@@ -17,6 +17,11 @@
         android:theme="@style/Theme.MyFood"
         tools:targetApi="31">
         <activity
+            android:name=".presentation.food_detail.view.FoodDetailActivity"
+            android:exported="false"
+            android:label="@string/title_activity_food_detail"
+            android:theme="@style/Theme.MyFood" />
+        <activity
             android:name=".presentation.splash_screen.view.SplashScreenActivity"
             android:exported="true">
             <intent-filter>
