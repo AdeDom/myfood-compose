@@ -12,6 +12,8 @@ import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.*
+import io.ktor.client.plugins.auth.*
+import io.ktor.client.plugins.auth.providers.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.plugins.logging.*
 import io.ktor.client.request.*
@@ -43,6 +45,38 @@ class DataSourceProvider(
                 }
             }
 
+            install(Auth) {
+                bearer {
+                    loadTokens {
+                        val accessToken = appDataStore.getAccessToken().orEmpty()
+                        val refreshToken = appDataStore.getRefreshToken().orEmpty()
+                        BearerTokens(accessToken, refreshToken)
+                    }
+
+                    refreshTokens {
+                        val tokenRequest = TokenRequest(
+                            accessToken = oldTokens?.accessToken,
+                            refreshToken = oldTokens?.refreshToken,
+                        )
+                        val tokenResponse: BaseResponse<TokenResponse> = client
+                            .post("${BuildConfig.BASE_URL}api/auth/refreshToken") {
+                                contentType(ContentType.Application.Json)
+                                setBody(tokenRequest)
+                            }
+                            .body()
+                        val accessToken = tokenResponse.result?.accessToken.orEmpty()
+                        val refreshToken = tokenResponse.result?.refreshToken.orEmpty()
+                        appDataStore.setAccessToken(accessToken)
+                        appDataStore.setRefreshToken(refreshToken)
+                        BearerTokens(accessToken, refreshToken)
+                    }
+
+                    sendWithoutRequest { request ->
+                        request.url.host == "myfood-server.herokuapp.com"
+                    }
+                }
+            }
+
             expectSuccess = true
             httpResponseValidator()
         }
@@ -60,9 +94,6 @@ class DataSourceProvider(
                         val baseResponse = jsonString.decodeApiServiceResponseFromString()
                         val baseError = baseResponse.error ?: createBaseError()
                         throw ApiServiceException(baseError)
-                    }
-                    HttpStatusCode.Unauthorized -> {
-                        callRefreshToken(clientException, request)
                     }
                     HttpStatusCode.Forbidden -> {
                         appDataStore.setAccessToken("")
@@ -85,43 +116,5 @@ class DataSourceProvider(
     private fun createBaseError(message: String? = null): BaseError {
         val messageString = message ?: "Error."
         return BaseError(message = messageString)
-    }
-
-    private suspend fun callRefreshToken(
-        clientException: ClientRequestException,
-        request: HttpRequest,
-    ) {
-        if (appDataStore.getRefreshToken().isNullOrBlank()) {
-            appDataStore.setAccessToken("")
-            appDataStore.setRefreshToken("")
-            appDataStore.setAuthRole(AuthRole.UnAuth)
-            val jsonString = clientException.response.bodyAsText()
-            val baseResponse = jsonString.decodeApiServiceResponseFromString()
-            val baseError = baseResponse.error ?: createBaseError()
-            throw ApiServiceException(baseError)
-        } else {
-            val tokenRequest = TokenRequest(
-                accessToken = appDataStore.getAccessToken(),
-                refreshToken = appDataStore.getRefreshToken(),
-            )
-            val tokenResponse: BaseResponse<TokenResponse> = getHttpClient()
-                .post("${BuildConfig.BASE_URL}api/auth/refreshToken") {
-                    contentType(ContentType.Application.Json)
-                    setBody(tokenRequest)
-                }
-                .body()
-
-            val accessToken = tokenResponse.result?.accessToken.orEmpty()
-            val refreshToken = tokenResponse.result?.refreshToken.orEmpty()
-            appDataStore.setAccessToken(accessToken)
-            appDataStore.setRefreshToken(refreshToken)
-            getHttpClient().request {
-                takeFrom(request)
-                headers {
-                    remove(HttpHeaders.Authorization)
-                    append(HttpHeaders.Authorization, "Bearer $accessToken")
-                }
-            }
-        }
     }
 }
