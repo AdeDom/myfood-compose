@@ -7,6 +7,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.adedom.myfood.base.BaseActivity
 import com.adedom.myfood.databinding.ActivityMainBinding
+import com.adedom.myfood.presentation.food_detail.view.FoodDetailActivity
 import com.adedom.myfood.presentation.main.event.MainUiEvent
 import com.adedom.myfood.presentation.main.state.MainUiState
 import com.adedom.myfood.presentation.main.view_model.MainViewModel
@@ -64,6 +65,11 @@ class MainActivity : BaseActivity() {
         binding.btLogout.setOnClickListener {
             viewModel.callLogout()
             viewModel.onLogoutEvent()
+        }
+
+        binding.btFoodDetail.setOnClickListener {
+            val intent = Intent(baseContext, FoodDetailActivity::class.java)
+            startActivity(intent)
         }
     }
 }
