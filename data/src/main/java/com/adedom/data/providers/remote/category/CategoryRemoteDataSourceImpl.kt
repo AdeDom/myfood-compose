@@ -2,7 +2,6 @@ package com.adedom.data.providers.remote.category
 
 import com.adedom.data.BuildConfig
 import com.adedom.data.providers.remote.DataSourceProvider
-import com.adedom.data.providers.remote.DataSourceType
 import com.adedom.myfood.data.models.base.BaseResponse
 import com.adedom.myfood.data.models.response.CategoryResponse
 import io.ktor.client.call.*
@@ -13,7 +12,7 @@ class CategoryRemoteDataSourceImpl(
 ) : CategoryRemoteDataSource {
 
     override suspend fun callCategoryAll(): BaseResponse<List<CategoryResponse>> {
-        return dataSourceProvider.getHttpClient(DataSourceType.UN_AUTHORIZATION)
+        return dataSourceProvider.getHttpClient()
             .get(BuildConfig.BASE_URL + "api/category/getCategoryAll")
             .body()
     }

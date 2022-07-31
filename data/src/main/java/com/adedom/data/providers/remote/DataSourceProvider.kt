@@ -2,40 +2,24 @@ package com.adedom.data.providers.remote
 
 import com.adedom.data.BuildConfig
 import com.adedom.data.providers.data_store.AppDataStore
+import com.adedom.data.utils.ApiServiceException
+import com.adedom.myfood.data.models.base.BaseError
 import io.ktor.client.*
-import io.ktor.client.engine.okhttp.*
+import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.plugins.logging.*
+import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 
 class DataSourceProvider(
     private val appDataStore: AppDataStore,
-    private val apiServiceInterceptor: ApiServiceInterceptor,
 ) {
 
-    fun getHttpClient(dataSourceType: DataSourceType): HttpClient {
-        return HttpClient(OkHttp) {
-            engine {
-                addInterceptor(apiServiceInterceptor)
-                if (dataSourceType == DataSourceType.AUTHORIZATION) {
-                    addInterceptor { chain ->
-                        val accessToken = runBlocking(Dispatchers.IO) {
-                            appDataStore.getAccessToken().orEmpty()
-                        }
-                        val request = chain.request()
-                            .newBuilder()
-                            .addHeader(HttpHeaders.Authorization, "Bearer $accessToken")
-                            .build()
-                        chain.proceed(request)
-                    }
-                }
-            }
-
+    fun getHttpClient(): HttpClient {
+        return HttpClient(CIO) {
             install(ContentNegotiation) {
                 json(Json {
                     ignoreUnknownKeys = true
@@ -52,6 +36,36 @@ class DataSourceProvider(
                     level = LogLevel.HEADERS
                 }
             }
+
+            expectSuccess = true
+            httpResponseValidator()
         }
+    }
+
+    private fun HttpClientConfig<CIOEngineConfig>.httpResponseValidator() {
+        HttpResponseValidator {
+            handleResponseExceptionWithRequest { exception, request ->
+                val clientException = exception as? ClientRequestException
+                    ?: return@handleResponseExceptionWithRequest
+                val exceptionResponse = clientException.response
+                when (exceptionResponse.status) {
+                    HttpStatusCode.BadRequest -> {
+                        val jsonString = exceptionResponse.bodyAsText()
+                        val baseResponse = jsonString.decodeApiServiceResponseFromString()
+                        val baseError = baseResponse.error ?: createBaseError()
+                        throw ApiServiceException(baseError)
+                    }
+                    else -> {
+                        val baseError = createBaseError(exception.message)
+                        throw ApiServiceException(baseError)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun createBaseError(message: String? = null): BaseError {
+        val messageString = message ?: "Error."
+        return BaseError(message = messageString)
     }
 }
