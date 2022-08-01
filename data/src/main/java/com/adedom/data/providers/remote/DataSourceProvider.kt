@@ -38,7 +38,7 @@ class DataSourceProvider(
                 requestTimeoutMillis = 60_000
             }
 
-            if (BuildConfig.APP_TYPE == "develop") {
+            if (BuildConfig.IS_DEVELOP_MODE) {
                 install(Logging) {
                     logger = Logger.DEFAULT
                     level = LogLevel.HEADERS
@@ -72,7 +72,7 @@ class DataSourceProvider(
                     }
 
                     sendWithoutRequest { request ->
-                        request.url.host == "myfood-server.herokuapp.com"
+                        request.url.host == BuildConfig.HOST
                     }
                 }
             }
